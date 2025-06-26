@@ -1,14 +1,14 @@
-## aws (2025-06-27 05:47)
+## aws-dev (2025-06-27 05:47)
 
-- ID:
-- Password:
+- ID: hogehoge
+- Password: hogehoge1234
 
 ---
 
-## aws (2025-06-27 05:46)
+## aws-stg (2025-06-27 05:46)
 
-ID:
-Password:
+- ID: hogehoge
+- Password: hogehoge1234
 
 ---
 

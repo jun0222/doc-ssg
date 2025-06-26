@@ -14,8 +14,8 @@ read -p "何のアカウントですか？: " title
 {
   echo "## $title ($DATE $TIME)"
   echo ""
-  echo "- ID:"
-  echo "- Password:"
+  echo "- ID: "
+  echo "- Password: "
   echo ""
   echo "---"
   echo ""
