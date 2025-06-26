@@ -1,0 +1,207 @@
+
+    <!DOCTYPE html>
+    <html lang="ja">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>開発ドキュメント</title>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css">
+      <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f9; }
+        .container { max-width: 800px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        section { margin-bottom: 40px; }
+        hr { border: none; border-top: 1px solid #ccc; }
+        pre { position: relative; }
+        .copy-button {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          background: #4CAF50;
+          color: #fff;
+          border: none;
+          padding: 5px 10px;
+          cursor: pointer;
+          border-radius: 3px;
+          display: none;
+        }
+        pre:hover .copy-button {
+          display: block;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        
+      <section>
+        <h2>202506270508</h2>
+        <h1>2025-06-27 05:08 サンプル会議(例)</h1>
+<ul>
+<li>リポジトリ移行時に作成。</li>
+<li>ミーティングについて<ul>
+<li>水曜日の会議廃止</li>
+<li>金曜日の会議を月曜日に移動</li>
+</ul>
+</li>
+</ul>
+
+        <hr>
+      </section>
+    
+      <section>
+        <h2>202408100238</h2>
+        <h1>2024-08-10 02:38の日記</h1>
+
+        <hr>
+      </section>
+    
+      <section>
+        <h2>2</h2>
+        <h1>marked ライブラリの使い方ガイド</h1>
+<p><code>marked</code>は、Markdown を HTML に変換するための高速で軽量なライブラリです。以下に、<code>marked</code>のインストール方法と基本的な使用方法を解説します。</p>
+<h2>インストール</h2>
+<p>まず、<code>marked</code>をプロジェクトにインストールします。</p>
+<pre><code class="language-bash">npm install marked
+</code></pre>
+<h2>基本的な使用方法</h2>
+<p><code>marked</code>を使って Markdown を HTML に変換する簡単な例を示します。</p>
+<pre><code class="language-javascript">// markedのインポート
+const { marked } = require(&#39;marked&#39;);
+
+// Markdown文字列
+const markdownString = `
+# サンプルMarkdown
+
+これは`marked`を使ったサンプルです。
+
+## 見出し2
+
+- リストアイテム1
+- リストアイテム2
+
+\`\`\`javascript
+console.log(&quot;Hello, world!&quot;);
+\`\`\`
+`;
+
+// HTMLに変換
+const htmlContent = marked(markdownString);
+
+// HTMLの表示
+console.log(htmlContent);
+</code></pre>
+<h2>シンタックスハイライトの追加</h2>
+<p><code>highlight.js</code>を使ってコードブロックにシンタックスハイライトを追加する方法を示します。</p>
+<h3>インストール</h3>
+<pre><code class="language-bash">npm install highlight.js
+</code></pre>
+<h3>使用方法</h3>
+<pre><code class="language-javascript">const { marked } = require(&quot;marked&quot;);
+const hljs = require(&quot;highlight.js&quot;);
+
+// シンタックスハイライトを設定
+marked.setOptions({
+  highlight: function (code, lang) {
+    const language = hljs.getLanguage(lang) ? lang : &quot;plaintext&quot;;
+    return hljs.highlight(code, { language }).value;
+  },
+});
+
+const markdownString = `
+# シンタックスハイライト付きサンプル
+
+\`\`\`javascript
+function add(a, b) {
+  return a + b;
+}
+\`\`\`
+`;
+
+// HTMLに変換
+const htmlContent = marked(markdownString);
+
+// HTMLの表示
+console.log(htmlContent);
+</code></pre>
+<p>これで、<code>marked</code>ライブラリを使用して Markdown を HTML に変換し、シンタックスハイライトを追加することができます。</p>
+
+        <hr>
+      </section>
+    
+      <section>
+        <h2>1</h2>
+        <h1>Git Flow ガイド</h1>
+<p>Git Flow は、Git を用いたブランチ管理のベストプラクティスの一つです。以下に基本的な Git Flow の使用方法とコマンドを解説します。</p>
+<h2>ブランチの種類</h2>
+<ol>
+<li><strong>master</strong>: リリース可能な状態のブランチ。</li>
+<li><strong>develop</strong>: 次のリリースの開発が行われるブランチ。</li>
+<li><strong>feature</strong>: 新機能の開発が行われるブランチ。<code>develop</code>から分岐。</li>
+<li><strong>release</strong>: リリース準備が行われるブランチ。<code>develop</code>から分岐。</li>
+<li><strong>hotfix</strong>: リリース済みのバージョンに対する緊急修正が行われるブランチ。<code>master</code>から分岐。</li>
+</ol>
+<h2>Git Flow のインストール</h2>
+<p>まず、Git Flow をインストールします。</p>
+<h3>macOS</h3>
+<pre><code class="language-bash">brew install git-flow
+</code></pre>
+<h3>Ubuntu</h3>
+<pre><code class="language-bash">sudo apt-get install git-flow
+</code></pre>
+<h2>Git Flow の初期化</h2>
+<p>新しいリポジトリで Git Flow を初期化します。</p>
+<pre><code class="language-bash">git flow init
+</code></pre>
+<h2>Feature ブランチの作成</h2>
+<p>新機能の開発を開始するために、<code>develop</code>ブランチから feature ブランチを作成します。</p>
+<pre><code class="language-bash">git flow feature start my-feature
+</code></pre>
+<p>開発が完了したら、feature ブランチを<code>develop</code>にマージします。</p>
+<pre><code class="language-bash">git flow feature finish my-feature
+</code></pre>
+<h2>Release ブランチの作成</h2>
+<p>リリース準備を開始するために、<code>develop</code>ブランチから release ブランチを作成します。</p>
+<pre><code class="language-bash">git flow release start 1.0.0
+</code></pre>
+<p>リリース準備が完了したら、release ブランチを<code>master</code>と<code>develop</code>にマージします。</p>
+<pre><code class="language-bash">git flow release finish 1.0.0
+</code></pre>
+<h2>Hotfix ブランチの作成</h2>
+<p>リリース後の緊急修正を行うために、<code>master</code>ブランチから hotfix ブランチを作成します。</p>
+<pre><code class="language-bash">git flow hotfix start fix-bug
+</code></pre>
+<p>修正が完了したら、hotfix ブランチを<code>master</code>と<code>develop</code>にマージします。</p>
+<pre><code class="language-bash">git flow hotfix finish fix-bug
+</code></pre>
+<p>以上が基本的な Git Flow の使用方法です。</p>
+<ul>
+<li><a href="https://example.com">link</a></li>
+<li><a href="https://example.com">https://example.com</a></li>
+</ul>
+<p><img src="../input/スクリーンショット 2024-08-10 2.24.20.png" alt="undefined" title="" /></p>
+
+        <hr>
+      </section>
+    
+      </div>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+      <script>
+        document.querySelectorAll('pre code').forEach((el) => {
+          hljs.highlightElement(el);
+        });
+        document.querySelectorAll('pre').forEach((pre) => {
+          const button = document.createElement('button');
+          button.className = 'copy-button';
+          button.innerText = 'Copy';
+          button.addEventListener('click', () => {
+            const code = pre.querySelector('code').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+              button.innerText = 'Copied';
+              setTimeout(() => { button.innerText = 'Copy'; }, 2000);
+            });
+          });
+          pre.appendChild(button);
+        });
+      </script>
+    </body>
+    </html>
+  
