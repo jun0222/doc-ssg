@@ -32,12 +32,6 @@ sh .sh/mtg.sh
 sh .sh/memo.sh
 ```
 
-## 新規 timestamp input md 作成 コマンド(あまり使わないかも)
-
-```bash
-node ./newInput.js
-```
-
 ## 画像の配置方法
 
 input/1.md を参考に画像リンクをつけて、input ディレクトリに配置
@@ -45,6 +39,15 @@ input/1.md を参考に画像リンクをつけて、input ディレクトリに
 ## 依存ライブラリのインストール
 
 main.js を実行する前に、依存ライブラリを global にインストールしてください。
+
+<details>
+<summary>あまり使わないかも</summary>
+
+## 新規 timestamp input md 作成 コマンド(あまり使わないかも)
+
+```bash
+node ./newInput.js
+```
 
 ## 本ツール用のディレクトリ作成コマンド
 
@@ -56,3 +59,5 @@ mkdir -p ./dist
 touch ./main.js
 touch ./newInput.js
 ```
+
+</details>
