@@ -192,7 +192,7 @@ fs.readdir(inputDir, (err, files) => {
       </style>
     </head>
     <body>
-      <button class="theme-toggle" onclick="toggleTheme()">🌙 ダークモード</button>
+      <button class="theme-toggle" onclick="toggleTheme()">🌙 </button>
       <div class="container">
         ${combinedContent}
       </div>
@@ -227,13 +227,13 @@ fs.readdir(inputDir, (err, files) => {
           
           if (body.classList.contains('dark-mode')) {
             body.classList.remove('dark-mode');
-            themeToggle.innerHTML = '🌙 ダークモード';
+            themeToggle.innerHTML = '🌙 ';
             lightTheme.disabled = false;
             darkTheme.disabled = true;
             localStorage.setItem('theme', 'light');
           } else {
             body.classList.add('dark-mode');
-            themeToggle.innerHTML = '☀️ ライトモード';
+            themeToggle.innerHTML = '☀️';
             lightTheme.disabled = true;
             darkTheme.disabled = false;
             localStorage.setItem('theme', 'dark');
@@ -249,11 +249,11 @@ fs.readdir(inputDir, (err, files) => {
           
           if (savedTheme === 'dark') {
             document.body.classList.add('dark-mode');
-            themeToggle.innerHTML = '☀️ ライトモード';
+            themeToggle.innerHTML = '☀️';
             lightTheme.disabled = true;
             darkTheme.disabled = false;
           } else {
-            themeToggle.innerHTML = '🌙 ダークモード';
+            themeToggle.innerHTML = '🌙 ';
             lightTheme.disabled = false;
             darkTheme.disabled = true;
           }
