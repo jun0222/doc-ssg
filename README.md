@@ -38,6 +38,3 @@ mkdir -p ./dist
 touch ./main.js
 touch ./newInput.js
 ```
-
-- ローカル git commit も自動化。
-- メモ自体の内容も cli で勝手に整形する？
