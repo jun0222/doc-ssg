@@ -1,19 +1,15 @@
-## aws-dev (2025-06-27 05:47)
+## gcp (2025-06-27 05:56)
 
-- ID: hogehoge
-- Password: hogehoge1234
+### ID
+
+```
+aaaa
+```
+
+### Password
+
+```
+bbbb
+```
 
 ---
-
-## aws-stg (2025-06-27 05:46)
-
-- ID: hogehoge
-- Password: hogehoge1234
-
----
-
-## サンプル id,パスワード
-
-- hogehoge サービス
-  - id: hogehoge
-  - pw: hogehoge1234
