@@ -5,7 +5,7 @@
 ## build ~ ローカル git commit コマンド
 
 ```bash
-sh ./save.sh
+sh .sh/save.sh
 ```
 
 ## build コマンド
@@ -14,7 +14,25 @@ sh ./save.sh
 node ./main.js
 ```
 
-## 新規 input md 作成 コマンド
+## id, パスワードの新セクション追加
+
+```bash
+sh .sh/idpw.sh
+```
+
+## 会議メモの新セクション追加
+
+```bash
+sh .sh/mtg.sh
+```
+
+## 作業メモの新セクション追加
+
+```bash
+sh .sh/memo.sh
+```
+
+## 新規 timestamp input md 作成 コマンド(あまり使わないかも)
 
 ```bash
 node ./newInput.js
