@@ -2,6 +2,12 @@
 
 このツールは、開発ドキュメント SSG して、ブラウザでの検索、タブ 1 つで閲覧できる HTML に変換するためのツールです。
 
+## build ~ ローカル git commit コマンド
+
+```bash
+sh ./save.sh
+```
+
 ## build コマンド
 
 ```bash
@@ -24,9 +30,14 @@ main.js を実行する前に、依存ライブラリを global にインスト�
 
 ## 本ツール用のディレクトリ作成コマンド
 
+※ git clone や zip で取得した場合は不要
+
 ```bash
 mkdir -p ./input
 mkdir -p ./dist
 touch ./main.js
 touch ./newInput.js
 ```
+
+- ローカル git commit も自動化。
+- メモ自体の内容も cli で勝手に整形する？
