@@ -58,7 +58,7 @@ fs.readdir(inputDir, (err, files) => {
     // ファイル名をセクションとして追加
     combinedContent += `
       <section>
-        <h2>${fileName.replace(".md", "")}</h2>
+        <h1>${fileName.replace(".md", "")}</h1>
         ${htmlContent}
         <hr>
       </section>
