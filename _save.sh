@@ -7,7 +7,7 @@ echo "=== HTMLビルド前、念の為変更をローカルgitにステージン
 git commit -m "保存: HTMLビルド前"
 echo "=== HTMLビルド前、念の為変更をローカルgitにコミットしました。 ==="
 
-node ./main.js
+node ./node/main.js
 echo "=== inputのmdファイルからHTMLファイルを生成しました。 ==="
 
 git add .

@@ -15,7 +15,7 @@ sh _save.sh
 ## build コマンド
 
 ```bash
-node main.js
+node ./node/main.js
 ```
 
 ## id, パスワードの新セクション追加
@@ -42,7 +42,7 @@ docs/1.md を参考に画像リンクをつけて、input ディレクトリに�
 
 ## 依存ライブラリのインストール
 
-main.js を実行する前に、依存ライブラリを global にインストールしてください。
+./node/main.js を実行する前に、依存ライブラリを global にインストールしてください。
 
 <details>
 <summary>あまり使わないかも</summary>
@@ -50,7 +50,7 @@ main.js を実行する前に、依存ライブラリを global にインスト�
 ## 新規 timestamp input md 作成 コマンド(あまり使わないかも)
 
 ```bash
-node newInput.js
+node ./node/newInput.js
 ```
 
 ## 本ツール用のディレクトリ作成コマンド
@@ -59,8 +59,8 @@ node newInput.js
 
 ```bash
 mkdir -p ./input
-touch ./main.js
-touch ./newInput.js
+touch ./node/main.js
+touch ./node/newInput.js
 ```
 
 </details>
