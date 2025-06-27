@@ -21,7 +21,7 @@ node ./node/main.js
 ## id, パスワードの新セクション追加
 
 ```bash
-sh _idpw.sh
+sh _id-password.sh
 ```
 
 ## 会議メモの新セクション追加
