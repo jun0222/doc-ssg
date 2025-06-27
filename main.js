@@ -4,7 +4,7 @@ const path = require("path");
 const { marked } = require("marked");
 const hljs = require("highlight.js");
 
-const inputDir = "./input/";
+const inputDir = "./docs/";
 const outputFile = "./index.html";
 
 // Highlight.js settings
@@ -16,11 +16,11 @@ marked.setOptions({
   renderer: new marked.Renderer(),
 });
 
-// Modify the renderer to prepend ../input/ to image paths
+// Modify the renderer to prepend ../docs/ to image paths
 const renderer = new marked.Renderer();
 
 renderer.image = function (imageObj, title, text) {
-  const newHref = path.join("../input/", imageObj.href);
+  const newHref = path.join("../docs/", imageObj.href);
   return `<img src="${newHref}" alt="${text}" title="${title || ""}" />`;
 };
 

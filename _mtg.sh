@@ -1,6 +1,6 @@
 #!/bin/bash
 
-output_file="./input/mtg.md"
+output_file="./docs/mtg.md"
 mkdir -p "$(dirname "$output_file")"
 temp_file=$(mktemp)
 

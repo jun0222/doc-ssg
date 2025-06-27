@@ -1,6 +1,6 @@
 #!/bin/bash
 
-output_file="./input/idpw.md"
+output_file="./docs/idpw.md"
 mkdir -p "$(dirname "$output_file")"
 temp_file=$(mktemp)
 

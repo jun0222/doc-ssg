@@ -11,7 +11,7 @@ const minutes = String(date.getMinutes()).padStart(2, "0");
 const fileName = `${year}${month}${day}${hours}${minutes}.md`;
 
 // ファイルの保存パス
-const inputDir = "./input/";
+const inputDir = "./docs/";
 const filePath = path.join(inputDir, fileName);
 
 // ディレクトリが存在しない場合は作成
