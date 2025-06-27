@@ -59,7 +59,6 @@ node ./newInput.js
 
 ```bash
 mkdir -p ./input
-mkdir -p ./dist
 touch ./main.js
 touch ./newInput.js
 ```

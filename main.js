@@ -5,7 +5,7 @@ const { marked } = require("marked");
 const hljs = require("highlight.js");
 
 const inputDir = "./input/";
-const outputFile = "./dist/index.html";
+const outputFile = "./index.html";
 
 // Highlight.js settings
 marked.setOptions({
