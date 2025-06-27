@@ -1,255 +1,343 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>開発ドキュメント</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css"
+      id="highlight-light"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/github-dark.min.css"
+      id="highlight-dark"
+      disabled
+    />
+    <style>
+      /* Light mode (default) */
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f4f4f9;
+        color: #333;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+      .container {
+        max-width: 800px;
+        margin: auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      }
+      section {
+        margin-bottom: 40px;
+      }
+      hr {
+        border: none;
+        border-top: 1px solid #ccc;
+      }
+      pre {
+        position: relative;
+      }
+      .copy-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #4caf50;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 3px;
+        display: none;
+      }
+      pre:hover .copy-button {
+        display: block;
+      }
 
-    <!DOCTYPE html>
-    <html lang="ja">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>開発ドキュメント</title>
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css" id="highlight-light">
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/github-dark.min.css" id="highlight-dark" disabled>
-      <style>
-        /* Light mode (default) */
-        body { 
-          font-family: Arial, sans-serif; 
-          margin: 0; 
-          padding: 20px; 
-          background-color: #f4f4f9; 
-          color: #333;
-          transition: background-color 0.3s ease, color 0.3s ease;
-        }
-        .container { 
-          max-width: 800px; 
-          margin: auto; 
-          background: #fff; 
-          padding: 20px; 
-          border-radius: 10px; 
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-          transition: background-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        section { margin-bottom: 40px; }
-        hr { border: none; border-top: 1px solid #ccc; }
-        pre { position: relative; }
-        .copy-button {
-          position: absolute;
-          top: 10px;
-          right: 10px;
-          background: #4CAF50;
-          color: #fff;
-          border: none;
-          padding: 5px 10px;
-          cursor: pointer;
-          border-radius: 3px;
-          display: none;
-        }
-        pre:hover .copy-button {
-          display: block;
-        }
-        
-        /* Theme toggle button */
-        .theme-toggle {
-          position: fixed;
-          top: 20px;
-          right: 20px;
-          background: #333;
-          color: #fff;
-          border: none;
-          padding: 10px 15px;
-          border-radius: 20px;
-          cursor: pointer;
-          font-size: 14px;
-          z-index: 1000;
-          transition: background-color 0.3s ease;
-        }
-        
-        .theme-toggle:hover {
-          background: #555;
-        }
-        
-        /* Dark mode styles */
-        body.dark-mode {
-          background-color: #1a1a1a;
-          color: #e0e0e0;
-        }
-        
-        body.dark-mode .container {
-          background: #2d2d2d;
-          box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-        }
-        
-        body.dark-mode .theme-toggle {
-          background: #e0e0e0;
-          color: #333;
-        }
-        
-        body.dark-mode .theme-toggle:hover {
-          background: #ccc;
-        }
-        
-        body.dark-mode hr {
-          border-top: 1px solid #555;
-        }
-        
-        body.dark-mode h1 {
-          background-color: #444 !important;
-          color: #fff !important;
-        }
-        
-        body.dark-mode code {
-          background-color: #3d3d3d;
-          color: #e0e0e0;
-        }
-        
-        body.dark-mode blockquote {
-          border-left: 4px solid #555;
-          background-color: #333;
-          color: #ccc;
-        }
-        
-        body.dark-mode table {
-          background-color: #2d2d2d;
-        }
-        
-        body.dark-mode th {
-          background-color: #444;
-          color: #e0e0e0;
-        }
-        
-        body.dark-mode td {
-          border-color: #555;
-          color: #e0e0e0;
-        }
-      </style>
-    </head>
-    <body>
-      <button class="theme-toggle" onclick="toggleTheme()">🌙 </button>
-      <div class="container">
-        
+      /* Theme toggle button */
+      .theme-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #333;
+        color: #fff;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 14px;
+        z-index: 1000;
+        transition: background-color 0.3s ease;
+      }
+
+      .theme-toggle:hover {
+        background: #555;
+      }
+
+      /* Dark mode styles */
+      body.dark-mode {
+        background-color: #1a1a1a;
+        color: #e0e0e0;
+      }
+
+      body.dark-mode .container {
+        background: #2d2d2d;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+      }
+
+      body.dark-mode .theme-toggle {
+        background: #e0e0e0;
+        color: #333;
+      }
+
+      body.dark-mode .theme-toggle:hover {
+        background: #ccc;
+      }
+
+      body.dark-mode hr {
+        border-top: 1px solid #555;
+      }
+
+      body.dark-mode h1 {
+        background-color: #444 !important;
+        color: #fff !important;
+      }
+
+      body.dark-mode code {
+        background-color: #3d3d3d;
+        color: #e0e0e0;
+      }
+
+      body.dark-mode blockquote {
+        border-left: 4px solid #555;
+        background-color: #333;
+        color: #ccc;
+      }
+
+      body.dark-mode table {
+        background-color: #2d2d2d;
+      }
+
+      body.dark-mode th {
+        background-color: #444;
+        color: #e0e0e0;
+      }
+
+      body.dark-mode td {
+        border-color: #555;
+        color: #e0e0e0;
+      }
+    </style>
+  </head>
+  <body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+    <div class="container">
       <section>
-        <h1 style="font-size: 36px; color: #fff; background-color: #333; padding: 10px; border-radius: 5px;">mtg</h1>
+        <h1
+          style="
+            font-size: 36px;
+            color: #fff;
+            background-color: #333;
+            padding: 10px;
+            border-radius: 5px;
+          "
+        >
+          mtg
+        </h1>
         <h2>定例 (2025-06-27 20:41)</h2>
-<ul>
-<li>ディレクトリ変更後動作確認</li>
-</ul>
-<hr>
-<h2>定例 (2025-06-27 05:48)</h2>
-<ul>
-<li>議題 1<ul>
-<li>参加者 A</li>
-<li>参加者 B</li>
-</ul>
-</li>
-<li>議題 2</li>
-<li>次回の予定<ul>
-<li>日時: 2025-07-04 10:00</li>
-<li>場所: オンライン</li>
-</ul>
-</li>
-</ul>
-<hr>
+        <ul>
+          <li>ディレクトリ変更後動作確認</li>
+        </ul>
+        <hr />
+        <h2>定例 (2025-06-27 05:48)</h2>
+        <ul>
+          <li>
+            議題 1
+            <ul>
+              <li>参加者 A</li>
+              <li>参加者 B</li>
+            </ul>
+          </li>
+          <li>議題 2</li>
+          <li>
+            次回の予定
+            <ul>
+              <li>日時: 2025-07-04 10:00</li>
+              <li>場所: オンライン</li>
+            </ul>
+          </li>
+        </ul>
+        <hr />
 
-        <hr>
+        <hr />
       </section>
-    
+
       <section>
-        <h1 style="font-size: 36px; color: #fff; background-color: #333; padding: 10px; border-radius: 5px;">memo</h1>
+        <h1
+          style="
+            font-size: 36px;
+            color: #fff;
+            background-color: #333;
+            padding: 10px;
+            border-radius: 5px;
+          "
+        >
+          memo
+        </h1>
         <h2>(2025-06-27 20:40)</h2>
-<ul>
-<li>あああ</li>
-<li>ディレクトリ変更後動作確認</li>
-</ul>
-<hr>
-<h2>(2025-06-27 05:48)</h2>
-<ul>
-<li>アカウント設定</li>
-<li>認証機能調査</li>
-<li>認証方法検討<ul>
-<li>OAuth2</li>
-<li>OpenID Connect</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h2>(2025-06-27 05:44)</h2>
-<ul>
-<li>UI 修正</li>
-<li>打ち合わせ</li>
-</ul>
-<hr>
+        <ul>
+          <li>あああ</li>
+          <li>ディレクトリ変更後動作確認</li>
+        </ul>
+        <hr />
+        <h2>(2025-06-27 05:48)</h2>
+        <ul>
+          <li>アカウント設定</li>
+          <li>認証機能調査</li>
+          <li>
+            認証方法検討
+            <ul>
+              <li>OAuth2</li>
+              <li>OpenID Connect</li>
+            </ul>
+          </li>
+        </ul>
+        <hr />
+        <h2>(2025-06-27 05:44)</h2>
+        <ul>
+          <li>UI 修正</li>
+          <li>打ち合わせ</li>
+        </ul>
+        <hr />
 
-        <hr>
+        <hr />
       </section>
-    
+
       <section>
-        <h1 style="font-size: 36px; color: #fff; background-color: #333; padding: 10px; border-radius: 5px;">id-password</h1>
+        <h1
+          style="
+            font-size: 36px;
+            color: #fff;
+            background-color: #333;
+            padding: 10px;
+            border-radius: 5px;
+          "
+        >
+          id-password
+        </h1>
         <h2>github (2025-06-27 20:43)</h2>
-<h3>ID</h3>
-<pre><code>aaaaaaa
+        <h3>ID</h3>
+        <pre><code>aaaaaaa
 </code></pre>
-<h3>Password</h3>
-<pre><code>bbbbbbb
+        <h3>Password</h3>
+        <pre><code>bbbbbbb
 </code></pre>
-<hr>
-<h2>hoge (2025-06-27 20:41)</h2>
-<h3>ID</h3>
-<pre><code>test
+        <hr />
+        <h2>hoge (2025-06-27 20:41)</h2>
+        <h3>ID</h3>
+        <pre><code>test
 </code></pre>
-<h3>Password</h3>
-<pre><code>changedirtest
+        <h3>Password</h3>
+        <pre><code>changedirtest
 </code></pre>
-<hr>
-<h2>aws (2025-06-27 05:57)</h2>
-<h3>ID</h3>
-<pre><code>aaaaaaaa
+        <hr />
+        <h2>aws (2025-06-27 05:57)</h2>
+        <h3>ID</h3>
+        <pre><code>aaaaaaaa
 </code></pre>
-<h3>Password</h3>
-<pre><code>bbbbbbbb
+        <h3>Password</h3>
+        <pre><code>bbbbbbbb
 </code></pre>
-<hr>
-<h2>gcp (2025-06-27 05:56)</h2>
-<h3>ID</h3>
-<pre><code>aaaa
+        <hr />
+        <h2>gcp (2025-06-27 05:56)</h2>
+        <h3>ID</h3>
+        <pre><code>aaaa
 </code></pre>
-<h3>Password</h3>
-<pre><code>bbbb
+        <h3>Password</h3>
+        <pre><code>bbbb
 </code></pre>
-<hr>
+        <hr />
 
-        <hr>
+        <hr />
       </section>
-    
+
       <section>
-        <h1 style="font-size: 36px; color: #fff; background-color: #333; padding: 10px; border-radius: 5px;">202506270508</h1>
+        <h1
+          style="
+            font-size: 36px;
+            color: #fff;
+            background-color: #333;
+            padding: 10px;
+            border-radius: 5px;
+          "
+        >
+          202506270508
+        </h1>
         <h1>2025-06-27 05:08 サンプル会議(例)</h1>
-<ul>
-<li>リポジトリ移行時に作成。</li>
-<li>ミーティングについて<ul>
-<li>水曜日の会議廃止</li>
-<li>金曜日の会議を月曜日に移動</li>
-</ul>
-</li>
-</ul>
+        <ul>
+          <li>リポジトリ移行時に作成。</li>
+          <li>
+            ミーティングについて
+            <ul>
+              <li>水曜日の会議廃止</li>
+              <li>金曜日の会議を月曜日に移動</li>
+            </ul>
+          </li>
+        </ul>
 
-        <hr>
+        <hr />
       </section>
-    
+
       <section>
-        <h1 style="font-size: 36px; color: #fff; background-color: #333; padding: 10px; border-radius: 5px;">202408100238</h1>
+        <h1
+          style="
+            font-size: 36px;
+            color: #fff;
+            background-color: #333;
+            padding: 10px;
+            border-radius: 5px;
+          "
+        >
+          202408100238
+        </h1>
         <h1>2024-08-10 02:38の日記</h1>
 
-        <hr>
+        <hr />
       </section>
-    
+
       <section>
-        <h1 style="font-size: 36px; color: #fff; background-color: #333; padding: 10px; border-radius: 5px;">2</h1>
+        <h1
+          style="
+            font-size: 36px;
+            color: #fff;
+            background-color: #333;
+            padding: 10px;
+            border-radius: 5px;
+          "
+        >
+          2
+        </h1>
         <h1>marked ライブラリの使い方ガイド</h1>
-<p><code>marked</code>は、Markdown を HTML に変換するための高速で軽量なライブラリです。以下に、<code>marked</code>のインストール方法と基本的な使用方法を解説します。</p>
-<h2>インストール</h2>
-<p>まず、<code>marked</code>をプロジェクトにインストールします。</p>
-<pre><code class="language-bash">npm install marked
+        <p>
+          <code>marked</code>は、Markdown を HTML
+          に変換するための高速で軽量なライブラリです。以下に、<code>marked</code>のインストール方法と基本的な使用方法を解説します。
+        </p>
+        <h2>インストール</h2>
+        <p>まず、<code>marked</code>をプロジェクトにインストールします。</p>
+        <pre><code class="language-bash">npm install marked
 </code></pre>
-<h2>基本的な使用方法</h2>
-<p><code>marked</code>を使って Markdown を HTML に変換する簡単な例を示します。</p>
-<pre><code class="language-javascript">// markedのインポート
+        <h2>基本的な使用方法</h2>
+        <p>
+          <code>marked</code>を使って Markdown を HTML
+          に変換する簡単な例を示します。
+        </p>
+        <pre><code class="language-javascript">// markedのインポート
 const { marked } = require(&#39;marked&#39;);
 
 // Markdown文字列
@@ -274,13 +362,16 @@ const htmlContent = marked(markdownString);
 // HTMLの表示
 console.log(htmlContent);
 </code></pre>
-<h2>シンタックスハイライトの追加</h2>
-<p><code>highlight.js</code>を使ってコードブロックにシンタックスハイライトを追加する方法を示します。</p>
-<h3>インストール</h3>
-<pre><code class="language-bash">npm install highlight.js
+        <h2>シンタックスハイライトの追加</h2>
+        <p>
+          <code>highlight.js</code
+          >を使ってコードブロックにシンタックスハイライトを追加する方法を示します。
+        </p>
+        <h3>インストール</h3>
+        <pre><code class="language-bash">npm install highlight.js
 </code></pre>
-<h3>使用方法</h3>
-<pre><code class="language-javascript">const { marked } = require(&quot;marked&quot;);
+        <h3>使用方法</h3>
+        <pre><code class="language-javascript">const { marked } = require(&quot;marked&quot;);
 const hljs = require(&quot;highlight.js&quot;);
 
 // シンタックスハイライトを設定
@@ -307,130 +398,182 @@ const htmlContent = marked(markdownString);
 // HTMLの表示
 console.log(htmlContent);
 </code></pre>
-<p>これで、<code>marked</code>ライブラリを使用して Markdown を HTML に変換し、シンタックスハイライトを追加することができます。</p>
+        <p>
+          これで、<code>marked</code>ライブラリを使用して Markdown を HTML
+          に変換し、シンタックスハイライトを追加することができます。
+        </p>
 
-        <hr>
+        <hr />
       </section>
-    
+
       <section>
-        <h1 style="font-size: 36px; color: #fff; background-color: #333; padding: 10px; border-radius: 5px;">1</h1>
+        <h1
+          style="
+            font-size: 36px;
+            color: #fff;
+            background-color: #333;
+            padding: 10px;
+            border-radius: 5px;
+          "
+        >
+          1
+        </h1>
         <h1>Git Flow ガイド</h1>
-<p>Git Flow は、Git を用いたブランチ管理のベストプラクティスの一つです。以下に基本的な Git Flow の使用方法とコマンドを解説します。</p>
-<h2>ブランチの種類</h2>
-<ol>
-<li><strong>master</strong>: リリース可能な状態のブランチ。</li>
-<li><strong>develop</strong>: 次のリリースの開発が行われるブランチ。</li>
-<li><strong>feature</strong>: 新機能の開発が行われるブランチ。<code>develop</code>から分岐。</li>
-<li><strong>release</strong>: リリース準備が行われるブランチ。<code>develop</code>から分岐。</li>
-<li><strong>hotfix</strong>: リリース済みのバージョンに対する緊急修正が行われるブランチ。<code>master</code>から分岐。</li>
-</ol>
-<h2>Git Flow のインストール</h2>
-<p>まず、Git Flow をインストールします。</p>
-<h3>macOS</h3>
-<pre><code class="language-bash">brew install git-flow
+        <p>
+          Git Flow は、Git
+          を用いたブランチ管理のベストプラクティスの一つです。以下に基本的な Git
+          Flow の使用方法とコマンドを解説します。
+        </p>
+        <h2>ブランチの種類</h2>
+        <ol>
+          <li><strong>master</strong>: リリース可能な状態のブランチ。</li>
+          <li>
+            <strong>develop</strong>: 次のリリースの開発が行われるブランチ。
+          </li>
+          <li>
+            <strong>feature</strong>:
+            新機能の開発が行われるブランチ。<code>develop</code>から分岐。
+          </li>
+          <li>
+            <strong>release</strong>:
+            リリース準備が行われるブランチ。<code>develop</code>から分岐。
+          </li>
+          <li>
+            <strong>hotfix</strong>:
+            リリース済みのバージョンに対する緊急修正が行われるブランチ。<code>master</code>から分岐。
+          </li>
+        </ol>
+        <h2>Git Flow のインストール</h2>
+        <p>まず、Git Flow をインストールします。</p>
+        <h3>macOS</h3>
+        <pre><code class="language-bash">brew install git-flow
 </code></pre>
-<h3>Ubuntu</h3>
-<pre><code class="language-bash">sudo apt-get install git-flow
+        <h3>Ubuntu</h3>
+        <pre><code class="language-bash">sudo apt-get install git-flow
 </code></pre>
-<h2>Git Flow の初期化</h2>
-<p>新しいリポジトリで Git Flow を初期化します。</p>
-<pre><code class="language-bash">git flow init
+        <h2>Git Flow の初期化</h2>
+        <p>新しいリポジトリで Git Flow を初期化します。</p>
+        <pre><code class="language-bash">git flow init
 </code></pre>
-<h2>Feature ブランチの作成</h2>
-<p>新機能の開発を開始するために、<code>develop</code>ブランチから feature ブランチを作成します。</p>
-<pre><code class="language-bash">git flow feature start my-feature
+        <h2>Feature ブランチの作成</h2>
+        <p>
+          新機能の開発を開始するために、<code>develop</code>ブランチから feature
+          ブランチを作成します。
+        </p>
+        <pre><code class="language-bash">git flow feature start my-feature
 </code></pre>
-<p>開発が完了したら、feature ブランチを<code>develop</code>にマージします。</p>
-<pre><code class="language-bash">git flow feature finish my-feature
+        <p>
+          開発が完了したら、feature
+          ブランチを<code>develop</code>にマージします。
+        </p>
+        <pre><code class="language-bash">git flow feature finish my-feature
 </code></pre>
-<h2>Release ブランチの作成</h2>
-<p>リリース準備を開始するために、<code>develop</code>ブランチから release ブランチを作成します。</p>
-<pre><code class="language-bash">git flow release start 1.0.0
+        <h2>Release ブランチの作成</h2>
+        <p>
+          リリース準備を開始するために、<code>develop</code>ブランチから release
+          ブランチを作成します。
+        </p>
+        <pre><code class="language-bash">git flow release start 1.0.0
 </code></pre>
-<p>リリース準備が完了したら、release ブランチを<code>master</code>と<code>develop</code>にマージします。</p>
-<pre><code class="language-bash">git flow release finish 1.0.0
+        <p>
+          リリース準備が完了したら、release
+          ブランチを<code>master</code>と<code>develop</code>にマージします。
+        </p>
+        <pre><code class="language-bash">git flow release finish 1.0.0
 </code></pre>
-<h2>Hotfix ブランチの作成</h2>
-<p>リリース後の緊急修正を行うために、<code>master</code>ブランチから hotfix ブランチを作成します。</p>
-<pre><code class="language-bash">git flow hotfix start fix-bug
+        <h2>Hotfix ブランチの作成</h2>
+        <p>
+          リリース後の緊急修正を行うために、<code>master</code>ブランチから
+          hotfix ブランチを作成します。
+        </p>
+        <pre><code class="language-bash">git flow hotfix start fix-bug
 </code></pre>
-<p>修正が完了したら、hotfix ブランチを<code>master</code>と<code>develop</code>にマージします。</p>
-<pre><code class="language-bash">git flow hotfix finish fix-bug
+        <p>
+          修正が完了したら、hotfix
+          ブランチを<code>master</code>と<code>develop</code>にマージします。
+        </p>
+        <pre><code class="language-bash">git flow hotfix finish fix-bug
 </code></pre>
-<p>以上が基本的な Git Flow の使用方法です。</p>
-<ul>
-<li><a href="https://example.com">link</a></li>
-<li><a href="https://example.com">https://example.com</a></li>
-</ul>
-<p><img src="../docs/スクリーンショット 2024-08-10 2.24.20.png" alt="undefined" title="" /></p>
+        <p>以上が基本的な Git Flow の使用方法です。</p>
+        <ul>
+          <li><a href="https://example.com">link</a></li>
+          <li><a href="https://example.com">https://example.com</a></li>
+        </ul>
+        <p>
+          <img
+            src="../docs/スクリーンショット 2024-08-10 2.24.20.png"
+            alt="undefined"
+            title=""
+          />
+        </p>
 
-        <hr>
+        <hr />
       </section>
-    
-      </div>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
-      <script>
-        // Highlight.js initialization
-        document.querySelectorAll('pre code').forEach((el) => {
-          hljs.highlightElement(el);
-        });
-        
-        // Copy button functionality
-        document.querySelectorAll('pre').forEach((pre) => {
-          const button = document.createElement('button');
-          button.className = 'copy-button';
-          button.innerText = 'Copy';
-          button.addEventListener('click', () => {
-            const code = pre.querySelector('code').innerText;
-            navigator.clipboard.writeText(code).then(() => {
-              button.innerText = 'Copied';
-              setTimeout(() => { button.innerText = 'Copy'; }, 2000);
-            });
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+    <script>
+      // Highlight.js initialization
+      document.querySelectorAll("pre code").forEach((el) => {
+        hljs.highlightElement(el);
+      });
+
+      // Copy button functionality
+      document.querySelectorAll("pre").forEach((pre) => {
+        const button = document.createElement("button");
+        button.className = "copy-button";
+        button.innerText = "Copy";
+        button.addEventListener("click", () => {
+          const code = pre.querySelector("code").innerText;
+          navigator.clipboard.writeText(code).then(() => {
+            button.innerText = "Copied";
+            setTimeout(() => {
+              button.innerText = "Copy";
+            }, 2000);
           });
-          pre.appendChild(button);
         });
-        
-        // Dark mode functionality
-        function toggleTheme() {
-          const body = document.body;
-          const themeToggle = document.querySelector('.theme-toggle');
-          const lightTheme = document.getElementById('highlight-light');
-          const darkTheme = document.getElementById('highlight-dark');
-          
-          if (body.classList.contains('dark-mode')) {
-            body.classList.remove('dark-mode');
-            themeToggle.innerHTML = '🌙 ';
-            lightTheme.disabled = false;
-            darkTheme.disabled = true;
-            localStorage.setItem('theme', 'light');
-          } else {
-            body.classList.add('dark-mode');
-            themeToggle.innerHTML = '☀️';
-            lightTheme.disabled = true;
-            darkTheme.disabled = false;
-            localStorage.setItem('theme', 'dark');
-          }
+        pre.appendChild(button);
+      });
+
+      // Dark mode functionality
+      function toggleTheme() {
+        const body = document.body;
+        const themeToggle = document.querySelector(".theme-toggle");
+        const lightTheme = document.getElementById("highlight-light");
+        const darkTheme = document.getElementById("highlight-dark");
+
+        if (body.classList.contains("dark-mode")) {
+          body.classList.remove("dark-mode");
+          themeToggle.innerHTML = "🌙 ";
+          lightTheme.disabled = false;
+          darkTheme.disabled = true;
+          localStorage.setItem("theme", "light");
+        } else {
+          body.classList.add("dark-mode");
+          themeToggle.innerHTML = "☀️";
+          lightTheme.disabled = true;
+          darkTheme.disabled = false;
+          localStorage.setItem("theme", "dark");
         }
-        
-        // Load saved theme on page load
-        document.addEventListener('DOMContentLoaded', function() {
-          const savedTheme = localStorage.getItem('theme');
-          const themeToggle = document.querySelector('.theme-toggle');
-          const lightTheme = document.getElementById('highlight-light');
-          const darkTheme = document.getElementById('highlight-dark');
-          
-          if (savedTheme === 'dark') {
-            document.body.classList.add('dark-mode');
-            themeToggle.innerHTML = '☀️';
-            lightTheme.disabled = true;
-            darkTheme.disabled = false;
-          } else {
-            themeToggle.innerHTML = '🌙 ';
-            lightTheme.disabled = false;
-            darkTheme.disabled = true;
-          }
-        });
-      </script>
-    </body>
-    </html>
-  
+      }
+
+      // Load saved theme on page load
+      document.addEventListener("DOMContentLoaded", function () {
+        const savedTheme = localStorage.getItem("theme");
+        const themeToggle = document.querySelector(".theme-toggle");
+        const lightTheme = document.getElementById("highlight-light");
+        const darkTheme = document.getElementById("highlight-dark");
+
+        if (savedTheme === "dark") {
+          document.body.classList.add("dark-mode");
+          themeToggle.innerHTML = "☀️";
+          lightTheme.disabled = true;
+          darkTheme.disabled = false;
+        } else {
+          themeToggle.innerHTML = "🌙 ";
+          lightTheme.disabled = false;
+          darkTheme.disabled = true;
+        }
+      });
+    </script>
+  </body>
+</html>

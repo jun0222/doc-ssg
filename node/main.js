@@ -20,7 +20,7 @@ marked.setOptions({
 const renderer = new marked.Renderer();
 
 renderer.image = function (imageObj, title, text) {
-  const newHref = path.join("../docs/", imageObj.href);
+  const newHref = path.join("./docs/", imageObj.href);
   return `<img src="${newHref}" alt="${text}" title="${title || ""}" />`;
 };
 
