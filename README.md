@@ -9,7 +9,7 @@
 ## build ~ ローカル git commit コマンド
 
 ```bash
-sh save.sh
+sh _save.sh
 ```
 
 ## build コマンド
@@ -21,19 +21,19 @@ node main.js
 ## id, パスワードの新セクション追加
 
 ```bash
-sh idpw.sh
+sh _idpw.sh
 ```
 
 ## 会議メモの新セクション追加
 
 ```bash
-sh mtg.sh
+sh _mtg.sh
 ```
 
 ## 作業メモの新セクション追加
 
 ```bash
-sh memo.sh
+sh _memo.sh
 ```
 
 ## 画像の配置方法
