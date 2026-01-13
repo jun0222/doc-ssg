@@ -24,6 +24,43 @@ renderer.image = function (imageObj, title, text) {
   return `<img src="${newHref}" alt="${text}" title="${title || ""}" />`;
 };
 
+// h2セクションを<details><summary>で囲む関数
+function wrapH2WithDetails(html) {
+  const h2Regex = /<h2[^>]*>(.*?)<\/h2>/gi;
+  let matches = [];
+  let match;
+
+  // 全てのh2を見つける
+  while ((match = h2Regex.exec(html)) !== null) {
+    matches.push({
+      title: match[1],
+      index: match.index,
+      endIndex: match.index + match[0].length,
+    });
+  }
+
+  if (matches.length === 0) return html;
+
+  let result = "";
+
+  // h2の前のコンテンツを追加
+  result += html.substring(0, matches[0].index);
+
+  // 各h2セクションを処理
+  for (let i = 0; i < matches.length; i++) {
+    const current = matches[i];
+    const nextStart = matches[i + 1] ? matches[i + 1].index : html.length;
+    const content = html.substring(current.endIndex, nextStart);
+
+    result += `<details class="h2-section">
+<summary><h2>${current.title}</h2></summary>
+${content}</details>
+`;
+  }
+
+  return result;
+}
+
 // 出力ファイルが既に存在する場合は削除
 if (fs.existsSync(outputFile)) {
   fs.unlinkSync(outputFile);
@@ -55,6 +92,9 @@ fs.readdir(inputDir, (err, files) => {
     // MarkdownをHTMLに変換
     const htmlContent = marked(fileContent, { renderer });
 
+    // h2セクションを折りたたみ可能にする
+    const wrappedContent = wrapH2WithDetails(htmlContent);
+
     // ファイル名をセクションとして追加
     combinedContent += `
       <section>
@@ -62,7 +102,7 @@ fs.readdir(inputDir, (err, files) => {
           ".md",
           ""
         )}</h1>
-        ${htmlContent}
+        ${wrappedContent}
         <hr>
       </section>
     `;
@@ -99,6 +139,41 @@ fs.readdir(inputDir, (err, files) => {
         }
         section { margin-bottom: 40px; }
         hr { border: none; border-top: 1px solid #ccc; }
+
+        /* h2セクション折りたたみスタイル */
+        details.h2-section {
+          margin: 10px 0;
+          border: 1px solid #ddd;
+          border-radius: 5px;
+          padding: 0;
+        }
+        details.h2-section > summary {
+          cursor: pointer;
+          padding: 10px 15px;
+          background-color: #f5f5f5;
+          border-radius: 5px;
+          list-style: none;
+        }
+        details.h2-section > summary::-webkit-details-marker {
+          display: none;
+        }
+        details.h2-section > summary::before {
+          content: "▶ ";
+          display: inline-block;
+          margin-right: 5px;
+          transition: transform 0.2s;
+        }
+        details.h2-section[open] > summary::before {
+          transform: rotate(90deg);
+        }
+        details.h2-section > summary h2 {
+          display: inline;
+          margin: 0;
+          font-size: 1.3em;
+        }
+        details.h2-section > *:not(summary) {
+          padding: 0 15px;
+        }
         pre { position: relative; }
         .copy-button {
           position: absolute;
@@ -188,6 +263,16 @@ fs.readdir(inputDir, (err, files) => {
         body.dark-mode td {
           border-color: #555;
           color: #e0e0e0;
+        }
+
+        body.dark-mode details.h2-section {
+          border-color: #555;
+        }
+        body.dark-mode details.h2-section > summary {
+          background-color: #3d3d3d;
+        }
+        body.dark-mode details.h2-section > summary:hover {
+          background-color: #4d4d4d;
         }
       </style>
     </head>
