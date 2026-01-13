@@ -60,6 +60,22 @@ node ./node/main.js
 
 ※ `docs/` 以外のファイル（node/, index.html など）は新しいリポジトリのものを使用してください。
 
+## 素早くメモを編集するためのエイリアス設定
+
+zshrc にエイリアスを追加すると、どこからでも素早くドキュメントを編集できます：
+
+```bash
+# ~/.zshrc に以下を追加
+echo 'alias devmemo="vi /path/to/doc-ssg/docs/memo.md"' >> ~/.zshrc
+echo 'alias devpwd="vi /path/to/doc-ssg/docs/id-password.md"' >> ~/.zshrc
+echo 'alias devmtg="vi /path/to/doc-ssg/docs/mtg.md"' >> ~/.zshrc
+
+# 変更を反映
+source ~/.zshrc
+```
+
+※ `/path/to/doc-ssg/` は実際のパスに置き換えてください（`pwd` で確認可能）
+
 <details>
 <summary>あまり使わないかも</summary>
 
