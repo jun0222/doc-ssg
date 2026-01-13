@@ -24,6 +24,28 @@ renderer.image = function (imageObj, title, text) {
   return `<img src="${newHref}" alt="${text}" title="${title || ""}" />`;
 };
 
+// Passwordセクションのコードブロックを隠す関数
+function wrapPasswordWithMask(html) {
+  // <h3>Password</h3> の後の <pre><code>...</code></pre> を検出して置換
+  const passwordRegex =
+    /(<h3[^>]*>Password<\/h3>\s*)(<pre><code[^>]*>)([\s\S]*?)(<\/code><\/pre>)/gi;
+
+  return html.replace(passwordRegex, (match, h3, preOpen, password, preClose) => {
+    const trimmedPassword = password.trim();
+    const masked = "*".repeat(Math.min(trimmedPassword.length, 12));
+    return `${h3}
+<div class="password-wrapper">
+  <div class="password-display">
+    <span class="password-masked">${masked}</span>
+    <span class="password-real" style="display:none;">${trimmedPassword}</span>
+  </div>
+  <button class="password-toggle" onclick="togglePassword(this)" title="表示/非表示">👁</button>
+  <button class="password-copy" onclick="copyPassword(this)" title="コピー">Copy</button>
+  <input type="hidden" class="password-value" value="${trimmedPassword.replace(/"/g, "&quot;")}">
+</div>`;
+  });
+}
+
 // h2セクションを<details><summary>で囲む関数
 function wrapH2WithDetails(html) {
   const h2Regex = /<h2[^>]*>(.*?)<\/h2>/gi;
@@ -92,8 +114,11 @@ fs.readdir(inputDir, (err, files) => {
     // MarkdownをHTMLに変換
     const htmlContent = marked(fileContent, { renderer });
 
+    // Passwordセクションを隠す
+    const passwordMasked = wrapPasswordWithMask(htmlContent);
+
     // h2セクションを折りたたみ可能にする
-    const wrappedContent = wrapH2WithDetails(htmlContent);
+    const wrappedContent = wrapH2WithDetails(passwordMasked);
 
     // ファイル名をセクションとして追加
     combinedContent += `
@@ -190,7 +215,45 @@ fs.readdir(inputDir, (err, files) => {
         pre:hover .copy-button {
           display: block;
         }
-        
+
+        /* パスワード表示スタイル */
+        .password-wrapper {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          background: #f5f5f5;
+          padding: 10px 15px;
+          border-radius: 5px;
+          margin: 10px 0;
+          font-family: monospace;
+        }
+        .password-display {
+          flex: 1;
+          font-size: 16px;
+          letter-spacing: 2px;
+        }
+        .password-masked {
+          color: #666;
+        }
+        .password-real {
+          color: #333;
+        }
+        .password-toggle, .password-copy {
+          background: #666;
+          color: #fff;
+          border: none;
+          padding: 5px 10px;
+          border-radius: 3px;
+          cursor: pointer;
+          font-size: 14px;
+        }
+        .password-toggle:hover, .password-copy:hover {
+          background: #888;
+        }
+        .password-copy.copied {
+          background: #4CAF50;
+        }
+
         /* Theme toggle button */
         .theme-toggle {
           position: fixed;
@@ -274,6 +337,16 @@ fs.readdir(inputDir, (err, files) => {
         body.dark-mode details.h2-section > summary:hover {
           background-color: #4d4d4d;
         }
+
+        body.dark-mode .password-wrapper {
+          background: #3d3d3d;
+        }
+        body.dark-mode .password-masked {
+          color: #aaa;
+        }
+        body.dark-mode .password-real {
+          color: #e0e0e0;
+        }
       </style>
     </head>
     <body>
@@ -303,6 +376,38 @@ fs.readdir(inputDir, (err, files) => {
           pre.appendChild(button);
         });
         
+        // Password toggle functionality
+        function togglePassword(btn) {
+          const wrapper = btn.closest('.password-wrapper');
+          const masked = wrapper.querySelector('.password-masked');
+          const real = wrapper.querySelector('.password-real');
+
+          if (masked.style.display === 'none') {
+            masked.style.display = 'inline';
+            real.style.display = 'none';
+            btn.textContent = '👁';
+          } else {
+            masked.style.display = 'none';
+            real.style.display = 'inline';
+            btn.textContent = '🙈';
+          }
+        }
+
+        // Password copy functionality
+        function copyPassword(btn) {
+          const wrapper = btn.closest('.password-wrapper');
+          const password = wrapper.querySelector('.password-value').value;
+
+          navigator.clipboard.writeText(password).then(() => {
+            btn.textContent = 'Copied';
+            btn.classList.add('copied');
+            setTimeout(() => {
+              btn.textContent = 'Copy';
+              btn.classList.remove('copied');
+            }, 2000);
+          });
+        }
+
         // Dark mode functionality
         function toggleTheme() {
           const body = document.body;

@@ -79,7 +79,45 @@
         pre:hover .copy-button {
           display: block;
         }
-        
+
+        /* パスワード表示スタイル */
+        .password-wrapper {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          background: #f5f5f5;
+          padding: 10px 15px;
+          border-radius: 5px;
+          margin: 10px 0;
+          font-family: monospace;
+        }
+        .password-display {
+          flex: 1;
+          font-size: 16px;
+          letter-spacing: 2px;
+        }
+        .password-masked {
+          color: #666;
+        }
+        .password-real {
+          color: #333;
+        }
+        .password-toggle, .password-copy {
+          background: #666;
+          color: #fff;
+          border: none;
+          padding: 5px 10px;
+          border-radius: 3px;
+          cursor: pointer;
+          font-size: 14px;
+        }
+        .password-toggle:hover, .password-copy:hover {
+          background: #888;
+        }
+        .password-copy.copied {
+          background: #4CAF50;
+        }
+
         /* Theme toggle button */
         .theme-toggle {
           position: fixed;
@@ -162,6 +200,16 @@
         }
         body.dark-mode details.h2-section > summary:hover {
           background-color: #4d4d4d;
+        }
+
+        body.dark-mode .password-wrapper {
+          background: #3d3d3d;
+        }
+        body.dark-mode .password-masked {
+          color: #aaa;
+        }
+        body.dark-mode .password-real {
+          color: #e0e0e0;
         }
       </style>
     </head>
@@ -248,8 +296,16 @@
 <pre><code>aaaaaaa
 </code></pre>
 <h3>Password</h3>
-<pre><code>bbbbbbb
-</code></pre>
+
+<div class="password-wrapper">
+  <div class="password-display">
+    <span class="password-masked">*******</span>
+    <span class="password-real" style="display:none;">bbbbbbb</span>
+  </div>
+  <button class="password-toggle" onclick="togglePassword(this)" title="表示/非表示">👁</button>
+  <button class="password-copy" onclick="copyPassword(this)" title="コピー">Copy</button>
+  <input type="hidden" class="password-value" value="bbbbbbb">
+</div>
 <hr>
 </details>
 <details class="h2-section">
@@ -259,8 +315,16 @@
 <pre><code>test
 </code></pre>
 <h3>Password</h3>
-<pre><code>changedirtest
-</code></pre>
+
+<div class="password-wrapper">
+  <div class="password-display">
+    <span class="password-masked">************</span>
+    <span class="password-real" style="display:none;">changedirtest</span>
+  </div>
+  <button class="password-toggle" onclick="togglePassword(this)" title="表示/非表示">👁</button>
+  <button class="password-copy" onclick="copyPassword(this)" title="コピー">Copy</button>
+  <input type="hidden" class="password-value" value="changedirtest">
+</div>
 <hr>
 </details>
 <details class="h2-section">
@@ -270,8 +334,16 @@
 <pre><code>aaaaaaaa
 </code></pre>
 <h3>Password</h3>
-<pre><code>bbbbbbbb
-</code></pre>
+
+<div class="password-wrapper">
+  <div class="password-display">
+    <span class="password-masked">********</span>
+    <span class="password-real" style="display:none;">bbbbbbbb</span>
+  </div>
+  <button class="password-toggle" onclick="togglePassword(this)" title="表示/非表示">👁</button>
+  <button class="password-copy" onclick="copyPassword(this)" title="コピー">Copy</button>
+  <input type="hidden" class="password-value" value="bbbbbbbb">
+</div>
 <hr>
 </details>
 <details class="h2-section">
@@ -281,8 +353,16 @@
 <pre><code>aaaa
 </code></pre>
 <h3>Password</h3>
-<pre><code>bbbb
-</code></pre>
+
+<div class="password-wrapper">
+  <div class="password-display">
+    <span class="password-masked">****</span>
+    <span class="password-real" style="display:none;">bbbb</span>
+  </div>
+  <button class="password-toggle" onclick="togglePassword(this)" title="表示/非表示">👁</button>
+  <button class="password-copy" onclick="copyPassword(this)" title="コピー">Copy</button>
+  <input type="hidden" class="password-value" value="bbbb">
+</div>
 <hr>
 </details>
 
@@ -489,6 +569,38 @@ console.log(htmlContent);
           pre.appendChild(button);
         });
         
+        // Password toggle functionality
+        function togglePassword(btn) {
+          const wrapper = btn.closest('.password-wrapper');
+          const masked = wrapper.querySelector('.password-masked');
+          const real = wrapper.querySelector('.password-real');
+
+          if (masked.style.display === 'none') {
+            masked.style.display = 'inline';
+            real.style.display = 'none';
+            btn.textContent = '👁';
+          } else {
+            masked.style.display = 'none';
+            real.style.display = 'inline';
+            btn.textContent = '🙈';
+          }
+        }
+
+        // Password copy functionality
+        function copyPassword(btn) {
+          const wrapper = btn.closest('.password-wrapper');
+          const password = wrapper.querySelector('.password-value').value;
+
+          navigator.clipboard.writeText(password).then(() => {
+            btn.textContent = 'Copied';
+            btn.classList.add('copied');
+            setTimeout(() => {
+              btn.textContent = 'Copy';
+              btn.classList.remove('copied');
+            }, 2000);
+          });
+        }
+
         // Dark mode functionality
         function toggleTheme() {
           const body = document.body;
