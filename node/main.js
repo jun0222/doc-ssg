@@ -46,42 +46,6 @@ function wrapPasswordWithMask(html) {
   });
 }
 
-// h2セクションを<details><summary>で囲む関数
-function wrapH2WithDetails(html) {
-  const h2Regex = /<h2[^>]*>(.*?)<\/h2>/gi;
-  let matches = [];
-  let match;
-
-  // 全てのh2を見つける
-  while ((match = h2Regex.exec(html)) !== null) {
-    matches.push({
-      title: match[1],
-      index: match.index,
-      endIndex: match.index + match[0].length,
-    });
-  }
-
-  if (matches.length === 0) return html;
-
-  let result = "";
-
-  // h2の前のコンテンツを追加
-  result += html.substring(0, matches[0].index);
-
-  // 各h2セクションを処理
-  for (let i = 0; i < matches.length; i++) {
-    const current = matches[i];
-    const nextStart = matches[i + 1] ? matches[i + 1].index : html.length;
-    const content = html.substring(current.endIndex, nextStart);
-
-    result += `<details class="h2-section">
-<summary><h2>${current.title}</h2></summary>
-${content}</details>
-`;
-  }
-
-  return result;
-}
 
 // 出力ファイルが既に存在する場合は削除
 if (fs.existsSync(outputFile)) {
@@ -115,21 +79,17 @@ fs.readdir(inputDir, (err, files) => {
     const htmlContent = marked(fileContent, { renderer });
 
     // Passwordセクションを隠す
-    const passwordMasked = wrapPasswordWithMask(htmlContent);
+    const wrappedContent = wrapPasswordWithMask(htmlContent);
 
-    // h2セクションを折りたたみ可能にする
-    const wrappedContent = wrapH2WithDetails(passwordMasked);
-
-    // ファイル名をセクションとして追加
+    // ファイル名をセクションとして追加（h1を折りたたみ可能に）
     combinedContent += `
-      <section>
-        <h1 style="font-size: 36px; color: #fff; background-color: #333; padding: 10px; border-radius: 5px;">${fileName.replace(
-          ".md",
-          ""
-        )}</h1>
-        ${wrappedContent}
-        <hr>
-      </section>
+      <details class="file-section">
+        <summary><h1>${fileName.replace(".md", "")}</h1></summary>
+        <div class="file-content">
+          ${wrappedContent}
+        </div>
+      </details>
+      <hr>
     `;
   }
 
@@ -162,42 +122,66 @@ fs.readdir(inputDir, (err, files) => {
           box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
           transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
-        section { margin-bottom: 40px; }
-        hr { border: none; border-top: 1px solid #ccc; }
+        hr { border: none; border-top: 1px solid #ccc; margin: 20px 0; }
 
-        /* h2セクション折りたたみスタイル */
-        details.h2-section {
-          margin: 10px 0;
+        /* はみ出し防止 */
+        .container {
+          overflow: hidden;
+        }
+        img {
+          max-width: 100%;
+          height: auto;
+        }
+        pre {
+          overflow-x: auto;
+          max-width: 100%;
+        }
+        code {
+          word-break: break-all;
+        }
+        p, li, td, th {
+          word-break: break-word;
+          overflow-wrap: break-word;
+        }
+
+        /* ファイルセクション折りたたみスタイル */
+        details.file-section {
+          margin: 15px 0;
           border: 1px solid #ddd;
-          border-radius: 5px;
-          padding: 0;
+          border-radius: 8px;
+          overflow: hidden;
         }
-        details.h2-section > summary {
+        details.file-section > summary {
           cursor: pointer;
-          padding: 10px 15px;
-          background-color: #f5f5f5;
-          border-radius: 5px;
+          padding: 0;
+          background-color: #333;
           list-style: none;
+          display: flex;
+          align-items: center;
         }
-        details.h2-section > summary::-webkit-details-marker {
+        details.file-section > summary::-webkit-details-marker {
           display: none;
         }
-        details.h2-section > summary::before {
-          content: "▶ ";
-          display: inline-block;
-          margin-right: 5px;
+        details.file-section > summary::before {
+          content: "▶";
+          color: #fff;
+          padding: 15px;
+          font-size: 14px;
           transition: transform 0.2s;
         }
-        details.h2-section[open] > summary::before {
+        details.file-section[open] > summary::before {
           transform: rotate(90deg);
         }
-        details.h2-section > summary h2 {
+        details.file-section > summary h1 {
           display: inline;
           margin: 0;
-          font-size: 1.3em;
+          font-size: 24px;
+          color: #fff;
+          background: none;
+          padding: 10px 15px 10px 0;
         }
-        details.h2-section > *:not(summary) {
-          padding: 0 15px;
+        .file-content {
+          padding: 15px;
         }
         pre { position: relative; }
         .copy-button {
@@ -328,14 +312,14 @@ fs.readdir(inputDir, (err, files) => {
           color: #e0e0e0;
         }
 
-        body.dark-mode details.h2-section {
+        body.dark-mode details.file-section {
           border-color: #555;
         }
-        body.dark-mode details.h2-section > summary {
-          background-color: #3d3d3d;
+        body.dark-mode details.file-section > summary {
+          background-color: #444;
         }
-        body.dark-mode details.h2-section > summary:hover {
-          background-color: #4d4d4d;
+        body.dark-mode details.file-section > summary:hover {
+          background-color: #555;
         }
 
         body.dark-mode .password-wrapper {

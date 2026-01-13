@@ -26,42 +26,66 @@
           box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
           transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
-        section { margin-bottom: 40px; }
-        hr { border: none; border-top: 1px solid #ccc; }
+        hr { border: none; border-top: 1px solid #ccc; margin: 20px 0; }
 
-        /* h2セクション折りたたみスタイル */
-        details.h2-section {
-          margin: 10px 0;
+        /* はみ出し防止 */
+        .container {
+          overflow: hidden;
+        }
+        img {
+          max-width: 100%;
+          height: auto;
+        }
+        pre {
+          overflow-x: auto;
+          max-width: 100%;
+        }
+        code {
+          word-break: break-all;
+        }
+        p, li, td, th {
+          word-break: break-word;
+          overflow-wrap: break-word;
+        }
+
+        /* ファイルセクション折りたたみスタイル */
+        details.file-section {
+          margin: 15px 0;
           border: 1px solid #ddd;
-          border-radius: 5px;
-          padding: 0;
+          border-radius: 8px;
+          overflow: hidden;
         }
-        details.h2-section > summary {
+        details.file-section > summary {
           cursor: pointer;
-          padding: 10px 15px;
-          background-color: #f5f5f5;
-          border-radius: 5px;
+          padding: 0;
+          background-color: #333;
           list-style: none;
+          display: flex;
+          align-items: center;
         }
-        details.h2-section > summary::-webkit-details-marker {
+        details.file-section > summary::-webkit-details-marker {
           display: none;
         }
-        details.h2-section > summary::before {
-          content: "▶ ";
-          display: inline-block;
-          margin-right: 5px;
+        details.file-section > summary::before {
+          content: "▶";
+          color: #fff;
+          padding: 15px;
+          font-size: 14px;
           transition: transform 0.2s;
         }
-        details.h2-section[open] > summary::before {
+        details.file-section[open] > summary::before {
           transform: rotate(90deg);
         }
-        details.h2-section > summary h2 {
+        details.file-section > summary h1 {
           display: inline;
           margin: 0;
-          font-size: 1.3em;
+          font-size: 24px;
+          color: #fff;
+          background: none;
+          padding: 10px 15px 10px 0;
         }
-        details.h2-section > *:not(summary) {
-          padding: 0 15px;
+        .file-content {
+          padding: 15px;
         }
         pre { position: relative; }
         .copy-button {
@@ -192,14 +216,14 @@
           color: #e0e0e0;
         }
 
-        body.dark-mode details.h2-section {
+        body.dark-mode details.file-section {
           border-color: #555;
         }
-        body.dark-mode details.h2-section > summary {
-          background-color: #3d3d3d;
+        body.dark-mode details.file-section > summary {
+          background-color: #444;
         }
-        body.dark-mode details.h2-section > summary:hover {
-          background-color: #4d4d4d;
+        body.dark-mode details.file-section > summary:hover {
+          background-color: #555;
         }
 
         body.dark-mode .password-wrapper {
@@ -217,19 +241,15 @@
       <button class="theme-toggle" onclick="toggleTheme()">🌙 </button>
       <div class="container">
         
-      <section>
-        <h1 style="font-size: 36px; color: #fff; background-color: #333; padding: 10px; border-radius: 5px;">mtg</h1>
-        <details class="h2-section">
-<summary><h2>定例 (2025-06-27 20:41)</h2></summary>
-
+      <details class="file-section">
+        <summary><h1>mtg</h1></summary>
+        <div class="file-content">
+          <h2>定例 (2025-06-27 20:41)</h2>
 <ul>
 <li>ディレクトリ変更後動作確認</li>
 </ul>
 <hr>
-</details>
-<details class="h2-section">
-<summary><h2>定例 (2025-06-27 05:48)</h2></summary>
-
+<h2>定例 (2025-06-27 05:48)</h2>
 <ul>
 <li>議題 1<ul>
 <li>参加者 A</li>
@@ -244,25 +264,21 @@
 </li>
 </ul>
 <hr>
-</details>
 
-        <hr>
-      </section>
+        </div>
+      </details>
+      <hr>
     
-      <section>
-        <h1 style="font-size: 36px; color: #fff; background-color: #333; padding: 10px; border-radius: 5px;">memo</h1>
-        <details class="h2-section">
-<summary><h2>(2025-06-27 20:40)</h2></summary>
-
+      <details class="file-section">
+        <summary><h1>memo</h1></summary>
+        <div class="file-content">
+          <h2>(2025-06-27 20:40)</h2>
 <ul>
 <li>あああ</li>
 <li>ディレクトリ変更後動作確認</li>
 </ul>
 <hr>
-</details>
-<details class="h2-section">
-<summary><h2>(2025-06-27 05:48)</h2></summary>
-
+<h2>(2025-06-27 05:48)</h2>
 <ul>
 <li>アカウント設定</li>
 <li>認証機能調査</li>
@@ -273,25 +289,21 @@
 </li>
 </ul>
 <hr>
-</details>
-<details class="h2-section">
-<summary><h2>(2025-06-27 05:44)</h2></summary>
-
+<h2>(2025-06-27 05:44)</h2>
 <ul>
 <li>UI 修正</li>
 <li>打ち合わせ</li>
 </ul>
 <hr>
-</details>
 
-        <hr>
-      </section>
+        </div>
+      </details>
+      <hr>
     
-      <section>
-        <h1 style="font-size: 36px; color: #fff; background-color: #333; padding: 10px; border-radius: 5px;">id-password</h1>
-        <details class="h2-section">
-<summary><h2>github (2025-06-27 20:43)</h2></summary>
-
+      <details class="file-section">
+        <summary><h1>id-password</h1></summary>
+        <div class="file-content">
+          <h2>github (2025-06-27 20:43)</h2>
 <h3>ID</h3>
 <pre><code>aaaaaaa
 </code></pre>
@@ -307,10 +319,7 @@
   <input type="hidden" class="password-value" value="bbbbbbb">
 </div>
 <hr>
-</details>
-<details class="h2-section">
-<summary><h2>hoge (2025-06-27 20:41)</h2></summary>
-
+<h2>hoge (2025-06-27 20:41)</h2>
 <h3>ID</h3>
 <pre><code>test
 </code></pre>
@@ -326,10 +335,7 @@
   <input type="hidden" class="password-value" value="changedirtest">
 </div>
 <hr>
-</details>
-<details class="h2-section">
-<summary><h2>aws (2025-06-27 05:57)</h2></summary>
-
+<h2>aws (2025-06-27 05:57)</h2>
 <h3>ID</h3>
 <pre><code>aaaaaaaa
 </code></pre>
@@ -345,10 +351,7 @@
   <input type="hidden" class="password-value" value="bbbbbbbb">
 </div>
 <hr>
-</details>
-<details class="h2-section">
-<summary><h2>gcp (2025-06-27 05:56)</h2></summary>
-
+<h2>gcp (2025-06-27 05:56)</h2>
 <h3>ID</h3>
 <pre><code>aaaa
 </code></pre>
@@ -364,14 +367,15 @@
   <input type="hidden" class="password-value" value="bbbb">
 </div>
 <hr>
-</details>
 
-        <hr>
-      </section>
+        </div>
+      </details>
+      <hr>
     
-      <section>
-        <h1 style="font-size: 36px; color: #fff; background-color: #333; padding: 10px; border-radius: 5px;">202506270508</h1>
-        <h1>2025-06-27 05:08 サンプル会議(例)</h1>
+      <details class="file-section">
+        <summary><h1>202506270508</h1></summary>
+        <div class="file-content">
+          <h1>2025-06-27 05:08 サンプル会議(例)</h1>
 <ul>
 <li>リポジトリ移行時に作成。</li>
 <li>ミーティングについて<ul>
@@ -381,30 +385,29 @@
 </li>
 </ul>
 
-        <hr>
-      </section>
+        </div>
+      </details>
+      <hr>
     
-      <section>
-        <h1 style="font-size: 36px; color: #fff; background-color: #333; padding: 10px; border-radius: 5px;">202408100238</h1>
-        <h1>2024-08-10 02:38の日記</h1>
+      <details class="file-section">
+        <summary><h1>202408100238</h1></summary>
+        <div class="file-content">
+          <h1>2024-08-10 02:38の日記</h1>
 
-        <hr>
-      </section>
+        </div>
+      </details>
+      <hr>
     
-      <section>
-        <h1 style="font-size: 36px; color: #fff; background-color: #333; padding: 10px; border-radius: 5px;">2</h1>
-        <h1>marked ライブラリの使い方ガイド</h1>
+      <details class="file-section">
+        <summary><h1>2</h1></summary>
+        <div class="file-content">
+          <h1>marked ライブラリの使い方ガイド</h1>
 <p><code>marked</code>は、Markdown を HTML に変換するための高速で軽量なライブラリです。以下に、<code>marked</code>のインストール方法と基本的な使用方法を解説します。</p>
-<details class="h2-section">
-<summary><h2>インストール</h2></summary>
-
+<h2>インストール</h2>
 <p>まず、<code>marked</code>をプロジェクトにインストールします。</p>
 <pre><code class="language-bash">npm install marked
 </code></pre>
-</details>
-<details class="h2-section">
-<summary><h2>基本的な使用方法</h2></summary>
-
+<h2>基本的な使用方法</h2>
 <p><code>marked</code>を使って Markdown を HTML に変換する簡単な例を示します。</p>
 <pre><code class="language-javascript">// markedのインポート
 const { marked } = require(&#39;marked&#39;);
@@ -431,10 +434,7 @@ const htmlContent = marked(markdownString);
 // HTMLの表示
 console.log(htmlContent);
 </code></pre>
-</details>
-<details class="h2-section">
-<summary><h2>シンタックスハイライトの追加</h2></summary>
-
+<h2>シンタックスハイライトの追加</h2>
 <p><code>highlight.js</code>を使ってコードブロックにシンタックスハイライトを追加する方法を示します。</p>
 <h3>インストール</h3>
 <pre><code class="language-bash">npm install highlight.js
@@ -468,18 +468,17 @@ const htmlContent = marked(markdownString);
 console.log(htmlContent);
 </code></pre>
 <p>これで、<code>marked</code>ライブラリを使用して Markdown を HTML に変換し、シンタックスハイライトを追加することができます。</p>
-</details>
 
-        <hr>
-      </section>
+        </div>
+      </details>
+      <hr>
     
-      <section>
-        <h1 style="font-size: 36px; color: #fff; background-color: #333; padding: 10px; border-radius: 5px;">1</h1>
-        <h1>Git Flow ガイド</h1>
+      <details class="file-section">
+        <summary><h1>1</h1></summary>
+        <div class="file-content">
+          <h1>Git Flow ガイド</h1>
 <p>Git Flow は、Git を用いたブランチ管理のベストプラクティスの一つです。以下に基本的な Git Flow の使用方法とコマンドを解説します。</p>
-<details class="h2-section">
-<summary><h2>ブランチの種類</h2></summary>
-
+<h2>ブランチの種類</h2>
 <ol>
 <li><strong>master</strong>: リリース可能な状態のブランチ。</li>
 <li><strong>develop</strong>: 次のリリースの開発が行われるブランチ。</li>
@@ -487,10 +486,7 @@ console.log(htmlContent);
 <li><strong>release</strong>: リリース準備が行われるブランチ。<code>develop</code>から分岐。</li>
 <li><strong>hotfix</strong>: リリース済みのバージョンに対する緊急修正が行われるブランチ。<code>master</code>から分岐。</li>
 </ol>
-</details>
-<details class="h2-section">
-<summary><h2>Git Flow のインストール</h2></summary>
-
+<h2>Git Flow のインストール</h2>
 <p>まず、Git Flow をインストールします。</p>
 <h3>macOS</h3>
 <pre><code class="language-bash">brew install git-flow
@@ -498,37 +494,25 @@ console.log(htmlContent);
 <h3>Ubuntu</h3>
 <pre><code class="language-bash">sudo apt-get install git-flow
 </code></pre>
-</details>
-<details class="h2-section">
-<summary><h2>Git Flow の初期化</h2></summary>
-
+<h2>Git Flow の初期化</h2>
 <p>新しいリポジトリで Git Flow を初期化します。</p>
 <pre><code class="language-bash">git flow init
 </code></pre>
-</details>
-<details class="h2-section">
-<summary><h2>Feature ブランチの作成</h2></summary>
-
+<h2>Feature ブランチの作成</h2>
 <p>新機能の開発を開始するために、<code>develop</code>ブランチから feature ブランチを作成します。</p>
 <pre><code class="language-bash">git flow feature start my-feature
 </code></pre>
 <p>開発が完了したら、feature ブランチを<code>develop</code>にマージします。</p>
 <pre><code class="language-bash">git flow feature finish my-feature
 </code></pre>
-</details>
-<details class="h2-section">
-<summary><h2>Release ブランチの作成</h2></summary>
-
+<h2>Release ブランチの作成</h2>
 <p>リリース準備を開始するために、<code>develop</code>ブランチから release ブランチを作成します。</p>
 <pre><code class="language-bash">git flow release start 1.0.0
 </code></pre>
 <p>リリース準備が完了したら、release ブランチを<code>master</code>と<code>develop</code>にマージします。</p>
 <pre><code class="language-bash">git flow release finish 1.0.0
 </code></pre>
-</details>
-<details class="h2-section">
-<summary><h2>Hotfix ブランチの作成</h2></summary>
-
+<h2>Hotfix ブランチの作成</h2>
 <p>リリース後の緊急修正を行うために、<code>master</code>ブランチから hotfix ブランチを作成します。</p>
 <pre><code class="language-bash">git flow hotfix start fix-bug
 </code></pre>
@@ -541,10 +525,10 @@ console.log(htmlContent);
 <li><a href="https://example.com">https://example.com</a></li>
 </ul>
 <p><img src="docs/スクリーンショット 2024-08-10 2.24.20.png" alt="undefined" title="" /></p>
-</details>
 
-        <hr>
-      </section>
+        </div>
+      </details>
+      <hr>
     
       </div>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
