@@ -44,6 +44,22 @@ docs/1.md を参考に画像リンクをつけて、input ディレクトリに�
 
 ./node/main.js を実行する前に、依存ライブラリを global にインストールしてください。
 
+## 本ツールのアップデート
+
+このツールに更新があった場合、既存ユーザーは以下の手順で移行できます：
+
+1. 新しいリポジトリを取得（clone または zip）
+2. 古い環境の `docs/` ディレクトリを新しい環境の `docs/` にコピー
+3. `node ./node/main.js` でビルド
+
+```bash
+# 例: 新しいリポジトリを clone した後
+cp -r /path/to/old/docs/* ./docs/
+node ./node/main.js
+```
+
+※ `docs/` 以外のファイル（node/, index.html など）は新しいリポジトリのものを使用してください。
+
 <details>
 <summary>あまり使わないかも</summary>
 
