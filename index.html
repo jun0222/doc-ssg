@@ -468,10 +468,34 @@
           line-height: 1.5;
         }
 
+        .memo-footer {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-top: 5px;
+        }
+
+        .memo-add-btn {
+          width: 28px;
+          height: 28px;
+          background: #4CAF50;
+          color: #fff;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 18px;
+          font-weight: bold;
+          line-height: 1;
+          transition: background-color 0.2s;
+        }
+
+        .memo-add-btn:hover {
+          background: #45a049;
+        }
+
         .memo-status {
           font-size: 11px;
           color: #999;
-          margin-top: 5px;
           text-align: right;
         }
 
@@ -614,6 +638,14 @@
           background: #3d3d3d;
           border-color: #555;
           color: #e0e0e0;
+        }
+
+        body.dark-mode .memo-add-btn {
+          background: #4CAF50;
+        }
+
+        body.dark-mode .memo-add-btn:hover {
+          background: #45a049;
         }
 
         body.dark-mode .resize-handle:hover,
@@ -962,7 +994,10 @@ console.log(htmlContent);
               </div>
               <div class="widget-section-content">
                 <textarea class="memo-textarea" id="memo-textarea" placeholder="Write your notes here..."></textarea>
-                <div class="memo-status" id="memo-status"></div>
+                <div class="memo-footer">
+                  <button class="memo-add-btn" onclick="insertMemoTemplate()" title="テンプレートを挿入">+</button>
+                  <div class="memo-status" id="memo-status"></div>
+                </div>
               </div>
             </div>
           </div>
@@ -1341,6 +1376,31 @@ console.log(htmlContent);
               }, 2000);
             }, 300);
           });
+        }
+
+        function insertMemoTemplate() {
+          const textarea = document.getElementById('memo-textarea');
+          const status = document.getElementById('memo-status');
+          const template = '## \n\n- \n\n--- \n';
+
+          const start = textarea.selectionStart;
+          const end = textarea.selectionEnd;
+          const text = textarea.value;
+
+          textarea.value = text.substring(0, start) + template + text.substring(end);
+
+          // カーソルを ## の後ろに移動
+          const newCursorPos = start + 3;
+          textarea.setSelectionRange(newCursorPos, newCursorPos);
+          textarea.focus();
+
+          // 保存
+          localStorage.setItem('widgetMemo', textarea.value);
+          status.textContent = 'Saved';
+          status.classList.add('saved');
+          setTimeout(() => {
+            status.textContent = '';
+          }, 2000);
         }
 
         // Load saved theme and widget state on page load
