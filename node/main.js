@@ -571,7 +571,12 @@ fs.readdir(inputDir, (err, files) => {
           margin-top: 5px;
         }
 
-        .memo-add-btn {
+        .memo-btn-group {
+          display: flex;
+          gap: 5px;
+        }
+
+        .memo-add-btn, .memo-copy-btn {
           width: 28px;
           height: 28px;
           background: #4CAF50;
@@ -579,14 +584,25 @@ fs.readdir(inputDir, (err, files) => {
           border: none;
           border-radius: 4px;
           cursor: pointer;
-          font-size: 18px;
+          font-size: 14px;
           font-weight: bold;
           line-height: 1;
           transition: background-color 0.2s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
-        .memo-add-btn:hover {
+        .memo-add-btn {
+          font-size: 18px;
+        }
+
+        .memo-add-btn:hover, .memo-copy-btn:hover {
           background: #45a049;
+        }
+
+        .memo-copy-btn.copied {
+          background: #2196F3;
         }
 
         .memo-status {
@@ -802,7 +818,10 @@ fs.readdir(inputDir, (err, files) => {
               <div class="widget-section-content">
                 <textarea class="memo-textarea" id="memo-textarea" placeholder="Write your notes here..."></textarea>
                 <div class="memo-footer">
-                  <button class="memo-add-btn" onclick="insertMemoTemplate()" title="テンプレートを挿入">+</button>
+                  <div class="memo-btn-group">
+                    <button class="memo-add-btn" onclick="insertMemoTemplate()" title="テンプレートを挿入">+</button>
+                    <button class="memo-copy-btn" onclick="copyMemo(this)" title="メモをコピー"><i class="fa-solid fa-copy"></i></button>
+                  </div>
                   <div class="memo-status" id="memo-status"></div>
                 </div>
               </div>
@@ -1208,6 +1227,20 @@ fs.readdir(inputDir, (err, files) => {
           setTimeout(() => {
             status.textContent = '';
           }, 2000);
+        }
+
+        function copyMemo(btn) {
+          const textarea = document.getElementById('memo-textarea');
+          const text = textarea.value;
+
+          if (!text) return;
+
+          navigator.clipboard.writeText(text).then(() => {
+            btn.classList.add('copied');
+            setTimeout(() => {
+              btn.classList.remove('copied');
+            }, 2000);
+          });
         }
 
         // Load saved theme and widget state on page load
