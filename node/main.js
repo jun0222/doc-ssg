@@ -105,23 +105,42 @@ fs.readdir(inputDir, (err, files) => {
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/github-dark.min.css" id="highlight-dark" disabled>
       <style>
         /* Light mode (default) */
-        body { 
-          font-family: Arial, sans-serif; 
-          margin: 0; 
-          padding: 20px; 
-          background-color: #f4f4f9; 
+        * {
+          box-sizing: border-box;
+        }
+        body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 20px;
+          background-color: #f4f4f9;
           color: #333;
           transition: background-color 0.3s ease, color 0.3s ease;
         }
-        .container { 
-          max-width: 800px; 
-          margin: auto; 
-          background: #fff; 
-          padding: 20px; 
-          border-radius: 10px; 
+
+        /* メインレイアウト */
+        .main-wrapper {
+          display: flex;
+          gap: 0;
+          max-width: 1800px;
+          margin: 0 auto;
+          position: relative;
+        }
+
+        .container {
+          flex: 1;
+          min-width: 0;
+          background: #fff;
+          padding: 20px;
+          border-radius: 10px;
           box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
           transition: background-color 0.3s ease, box-shadow 0.3s ease;
+          margin-right: 0;
         }
+
+        .main-wrapper.widget-open .container {
+          margin-right: 10px;
+        }
+
         hr { border: none; border-top: 1px solid #ccc; margin: 20px 0; }
 
         /* はみ出し防止 */
@@ -238,11 +257,17 @@ fs.readdir(inputDir, (err, files) => {
           background: #4CAF50;
         }
 
-        /* Theme toggle button */
-        .theme-toggle {
+        /* ツールバー */
+        .toolbar {
           position: fixed;
           top: 20px;
           right: 20px;
+          display: flex;
+          gap: 10px;
+          z-index: 1000;
+        }
+
+        .toolbar button {
           background: #333;
           color: #fff;
           border: none;
@@ -250,63 +275,323 @@ fs.readdir(inputDir, (err, files) => {
           border-radius: 20px;
           cursor: pointer;
           font-size: 14px;
-          z-index: 1000;
           transition: background-color 0.3s ease;
         }
-        
-        .theme-toggle:hover {
+
+        .toolbar button:hover {
           background: #555;
         }
-        
+
+        /* ウィジェットパネル */
+        .widget-panel {
+          width: 400px;
+          min-width: 280px;
+          max-width: 800px;
+          background: #fff;
+          border-radius: 10px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          display: none;
+          flex-direction: column;
+          overflow: hidden;
+          position: relative;
+          transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .main-wrapper.widget-open .widget-panel {
+          display: flex;
+        }
+
+        /* リサイズハンドル */
+        .resize-handle {
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          width: 6px;
+          background: transparent;
+          cursor: ew-resize;
+          transition: background-color 0.2s;
+        }
+
+        .resize-handle:hover,
+        .resize-handle.active {
+          background: #4CAF50;
+        }
+
+        .widget-panel-content {
+          flex: 1;
+          overflow-y: auto;
+          padding: 15px;
+          padding-left: 20px;
+        }
+
+        .widget-header {
+          padding: 15px 20px;
+          background: #333;
+          color: #fff;
+          font-weight: bold;
+          font-size: 16px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .widget-section {
+          margin-bottom: 20px;
+        }
+
+        .widget-section-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 10px 0;
+          border-bottom: 2px solid #333;
+          margin-bottom: 10px;
+          cursor: pointer;
+          user-select: none;
+        }
+
+        .widget-section-header h3 {
+          margin: 0;
+          font-size: 14px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .widget-section-header .toggle-icon {
+          transition: transform 0.2s;
+        }
+
+        .widget-section.collapsed .toggle-icon {
+          transform: rotate(-90deg);
+        }
+
+        .widget-section.collapsed .widget-section-content {
+          display: none;
+        }
+
+        /* カレンダー */
+        .calendar-nav {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 10px;
+        }
+
+        .calendar-nav button {
+          background: #eee;
+          border: none;
+          padding: 5px 10px;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 14px;
+        }
+
+        .calendar-nav button:hover {
+          background: #ddd;
+        }
+
+        .calendar-nav span {
+          font-weight: bold;
+        }
+
+        .calendar-grid {
+          display: grid;
+          grid-template-columns: repeat(7, 1fr);
+          gap: 2px;
+          text-align: center;
+        }
+
+        .calendar-grid .day-header {
+          font-weight: bold;
+          font-size: 11px;
+          padding: 5px 2px;
+          color: #666;
+        }
+
+        .calendar-grid .day {
+          padding: 8px 2px;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 13px;
+          transition: background-color 0.2s;
+        }
+
+        .calendar-grid .day:hover {
+          background: #e0e0e0;
+        }
+
+        .calendar-grid .day.today {
+          background: #4CAF50;
+          color: #fff;
+          font-weight: bold;
+        }
+
+        .calendar-grid .day.other-month {
+          color: #bbb;
+        }
+
+        .calendar-grid .day.sunday {
+          color: #e53935;
+        }
+
+        .calendar-grid .day.saturday {
+          color: #1e88e5;
+        }
+
+        .calendar-grid .day.today.sunday,
+        .calendar-grid .day.today.saturday {
+          color: #fff;
+        }
+
+        /* TODOリスト */
+        .todo-input-wrapper {
+          display: flex;
+          gap: 5px;
+          margin-bottom: 10px;
+        }
+
+        .todo-input-wrapper input {
+          flex: 1;
+          padding: 8px 10px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          font-size: 13px;
+        }
+
+        .todo-input-wrapper button {
+          padding: 8px 12px;
+          background: #4CAF50;
+          color: #fff;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 13px;
+        }
+
+        .todo-input-wrapper button:hover {
+          background: #45a049;
+        }
+
+        .todo-list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+
+        .todo-item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 8px 0;
+          border-bottom: 1px solid #eee;
+        }
+
+        .todo-item input[type="checkbox"] {
+          width: 16px;
+          height: 16px;
+          cursor: pointer;
+        }
+
+        .todo-item span {
+          flex: 1;
+          font-size: 13px;
+        }
+
+        .todo-item.completed span {
+          text-decoration: line-through;
+          color: #999;
+        }
+
+        .todo-item button {
+          background: transparent;
+          border: none;
+          color: #e53935;
+          cursor: pointer;
+          font-size: 16px;
+          padding: 0 5px;
+          opacity: 0.5;
+          transition: opacity 0.2s;
+        }
+
+        .todo-item:hover button {
+          opacity: 1;
+        }
+
+        /* メモ */
+        .memo-textarea {
+          width: 100%;
+          min-height: 150px;
+          padding: 10px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          font-size: 13px;
+          font-family: inherit;
+          resize: vertical;
+          line-height: 1.5;
+        }
+
+        .memo-status {
+          font-size: 11px;
+          color: #999;
+          margin-top: 5px;
+          text-align: right;
+        }
+
+        .memo-status.saved {
+          color: #4CAF50;
+        }
+
         /* Dark mode styles */
         body.dark-mode {
           background-color: #1a1a1a;
           color: #e0e0e0;
         }
-        
+
         body.dark-mode .container {
           background: #2d2d2d;
           box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
         }
-        
-        body.dark-mode .theme-toggle {
+
+        body.dark-mode .toolbar button {
           background: #e0e0e0;
           color: #333;
         }
-        
-        body.dark-mode .theme-toggle:hover {
+
+        body.dark-mode .toolbar button:hover {
           background: #ccc;
         }
-        
+
         body.dark-mode hr {
           border-top: 1px solid #555;
         }
-        
+
         body.dark-mode h1 {
           background-color: #444 !important;
           color: #fff !important;
         }
-        
+
         body.dark-mode code {
           background-color: #3d3d3d;
           color: #e0e0e0;
         }
-        
+
         body.dark-mode blockquote {
           border-left: 4px solid #555;
           background-color: #333;
           color: #ccc;
         }
-        
+
         body.dark-mode table {
           background-color: #2d2d2d;
         }
-        
+
         body.dark-mode th {
           background-color: #444;
           color: #e0e0e0;
         }
-        
+
         body.dark-mode td {
           border-color: #555;
           color: #e0e0e0;
@@ -331,12 +616,124 @@ fs.readdir(inputDir, (err, files) => {
         body.dark-mode .password-real {
           color: #e0e0e0;
         }
+
+        /* ウィジェットパネル ダークモード */
+        body.dark-mode .widget-panel {
+          background: #2d2d2d;
+          box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .widget-header {
+          background: #444;
+        }
+
+        body.dark-mode .widget-section-header {
+          border-bottom-color: #555;
+        }
+
+        body.dark-mode .calendar-nav button {
+          background: #444;
+          color: #e0e0e0;
+        }
+
+        body.dark-mode .calendar-nav button:hover {
+          background: #555;
+        }
+
+        body.dark-mode .calendar-grid .day-header {
+          color: #999;
+        }
+
+        body.dark-mode .calendar-grid .day:hover {
+          background: #444;
+        }
+
+        body.dark-mode .calendar-grid .day.other-month {
+          color: #555;
+        }
+
+        body.dark-mode .todo-input-wrapper input {
+          background: #3d3d3d;
+          border-color: #555;
+          color: #e0e0e0;
+        }
+
+        body.dark-mode .todo-item {
+          border-bottom-color: #444;
+        }
+
+        body.dark-mode .todo-item.completed span {
+          color: #666;
+        }
+
+        body.dark-mode .memo-textarea {
+          background: #3d3d3d;
+          border-color: #555;
+          color: #e0e0e0;
+        }
+
+        body.dark-mode .resize-handle:hover,
+        body.dark-mode .resize-handle.active {
+          background: #4CAF50;
+        }
       </style>
     </head>
     <body>
-      <button class="theme-toggle" onclick="toggleTheme()">🌙 </button>
-      <div class="container">
-        ${combinedContent}
+      <div class="toolbar">
+        <button class="widget-toggle" onclick="toggleWidgetPanel()">Widgets</button>
+        <button class="theme-toggle" onclick="toggleTheme()"></button>
+      </div>
+      <div class="main-wrapper">
+        <div class="container">
+          ${combinedContent}
+        </div>
+        <div class="widget-panel">
+          <div class="resize-handle"></div>
+          <div class="widget-header">
+            <span>Widgets</span>
+          </div>
+          <div class="widget-panel-content">
+            <!-- カレンダー -->
+            <div class="widget-section" id="calendar-section">
+              <div class="widget-section-header" onclick="toggleSection('calendar-section')">
+                <h3><span class="toggle-icon">▼</span> Calendar</h3>
+              </div>
+              <div class="widget-section-content">
+                <div class="calendar-nav">
+                  <button onclick="changeMonth(-1)">&lt;</button>
+                  <span id="calendar-title"></span>
+                  <button onclick="changeMonth(1)">&gt;</button>
+                </div>
+                <div class="calendar-grid" id="calendar-grid"></div>
+              </div>
+            </div>
+
+            <!-- TODOリスト -->
+            <div class="widget-section" id="todo-section">
+              <div class="widget-section-header" onclick="toggleSection('todo-section')">
+                <h3><span class="toggle-icon">▼</span> TODO</h3>
+              </div>
+              <div class="widget-section-content">
+                <div class="todo-input-wrapper">
+                  <input type="text" id="todo-input" placeholder="Add new task..." onkeypress="handleTodoKeypress(event)">
+                  <button onclick="addTodo()">Add</button>
+                </div>
+                <ul class="todo-list" id="todo-list"></ul>
+              </div>
+            </div>
+
+            <!-- メモ -->
+            <div class="widget-section" id="memo-section">
+              <div class="widget-section-header" onclick="toggleSection('memo-section')">
+                <h3><span class="toggle-icon">▼</span> Memo</h3>
+              </div>
+              <div class="widget-section-content">
+                <textarea class="memo-textarea" id="memo-textarea" placeholder="Write your notes here..."></textarea>
+                <div class="memo-status" id="memo-status"></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
       <script>
@@ -344,7 +741,7 @@ fs.readdir(inputDir, (err, files) => {
         document.querySelectorAll('pre code').forEach((el) => {
           hljs.highlightElement(el);
         });
-        
+
         // Copy button functionality
         document.querySelectorAll('pre').forEach((pre) => {
           const button = document.createElement('button');
@@ -359,7 +756,7 @@ fs.readdir(inputDir, (err, files) => {
           });
           pre.appendChild(button);
         });
-        
+
         // Password toggle functionality
         function togglePassword(btn) {
           const wrapper = btn.closest('.password-wrapper');
@@ -398,10 +795,10 @@ fs.readdir(inputDir, (err, files) => {
           const themeToggle = document.querySelector('.theme-toggle');
           const lightTheme = document.getElementById('highlight-light');
           const darkTheme = document.getElementById('highlight-dark');
-          
+
           if (body.classList.contains('dark-mode')) {
             body.classList.remove('dark-mode');
-            themeToggle.innerHTML = '🌙 ';
+            themeToggle.innerHTML = '🌙';
             lightTheme.disabled = false;
             darkTheme.disabled = true;
             localStorage.setItem('theme', 'light');
@@ -413,24 +810,242 @@ fs.readdir(inputDir, (err, files) => {
             localStorage.setItem('theme', 'dark');
           }
         }
-        
-        // Load saved theme on page load
+
+        // Widget panel toggle
+        function toggleWidgetPanel() {
+          const wrapper = document.querySelector('.main-wrapper');
+          const isOpen = wrapper.classList.toggle('widget-open');
+          localStorage.setItem('widgetPanelOpen', isOpen);
+        }
+
+        // Widget section toggle
+        function toggleSection(sectionId) {
+          const section = document.getElementById(sectionId);
+          section.classList.toggle('collapsed');
+          const collapsed = JSON.parse(localStorage.getItem('widgetCollapsed') || '{}');
+          collapsed[sectionId] = section.classList.contains('collapsed');
+          localStorage.setItem('widgetCollapsed', JSON.stringify(collapsed));
+        }
+
+        // Resize handle functionality
+        (function() {
+          const panel = document.querySelector('.widget-panel');
+          const handle = document.querySelector('.resize-handle');
+          let isResizing = false;
+
+          handle.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            handle.classList.add('active');
+            document.body.style.cursor = 'ew-resize';
+            document.body.style.userSelect = 'none';
+          });
+
+          document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            const containerRight = document.querySelector('.main-wrapper').getBoundingClientRect().right;
+            const newWidth = containerRight - e.clientX;
+            const clampedWidth = Math.max(280, Math.min(800, newWidth));
+            panel.style.width = clampedWidth + 'px';
+            localStorage.setItem('widgetPanelWidth', clampedWidth);
+          });
+
+          document.addEventListener('mouseup', () => {
+            if (isResizing) {
+              isResizing = false;
+              handle.classList.remove('active');
+              document.body.style.cursor = '';
+              document.body.style.userSelect = '';
+            }
+          });
+        })();
+
+        // Calendar functionality
+        let currentDate = new Date();
+
+        function renderCalendar() {
+          const year = currentDate.getFullYear();
+          const month = currentDate.getMonth();
+          const today = new Date();
+
+          document.getElementById('calendar-title').textContent =
+            year + '年 ' + (month + 1) + '月';
+
+          const firstDay = new Date(year, month, 1);
+          const lastDay = new Date(year, month + 1, 0);
+          const startDay = firstDay.getDay();
+          const daysInMonth = lastDay.getDate();
+
+          const grid = document.getElementById('calendar-grid');
+          grid.innerHTML = '';
+
+          const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
+          dayNames.forEach((name, i) => {
+            const header = document.createElement('div');
+            header.className = 'day-header';
+            if (i === 0) header.style.color = '#e53935';
+            if (i === 6) header.style.color = '#1e88e5';
+            header.textContent = name;
+            grid.appendChild(header);
+          });
+
+          // Previous month days
+          const prevLastDay = new Date(year, month, 0).getDate();
+          for (let i = startDay - 1; i >= 0; i--) {
+            const day = document.createElement('div');
+            day.className = 'day other-month';
+            day.textContent = prevLastDay - i;
+            grid.appendChild(day);
+          }
+
+          // Current month days
+          for (let i = 1; i <= daysInMonth; i++) {
+            const day = document.createElement('div');
+            const dayOfWeek = new Date(year, month, i).getDay();
+            day.className = 'day';
+            if (dayOfWeek === 0) day.classList.add('sunday');
+            if (dayOfWeek === 6) day.classList.add('saturday');
+            if (year === today.getFullYear() && month === today.getMonth() && i === today.getDate()) {
+              day.classList.add('today');
+            }
+            day.textContent = i;
+            grid.appendChild(day);
+          }
+
+          // Next month days
+          const totalCells = startDay + daysInMonth;
+          const remaining = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+          for (let i = 1; i <= remaining; i++) {
+            const day = document.createElement('div');
+            day.className = 'day other-month';
+            day.textContent = i;
+            grid.appendChild(day);
+          }
+        }
+
+        function changeMonth(delta) {
+          currentDate.setMonth(currentDate.getMonth() + delta);
+          renderCalendar();
+        }
+
+        // TODO functionality
+        let todos = JSON.parse(localStorage.getItem('widgetTodos') || '[]');
+
+        function renderTodos() {
+          const list = document.getElementById('todo-list');
+          list.innerHTML = '';
+
+          todos.forEach((todo, index) => {
+            const item = document.createElement('li');
+            item.className = 'todo-item' + (todo.completed ? ' completed' : '');
+            item.innerHTML = \`
+              <input type="checkbox" \${todo.completed ? 'checked' : ''} onchange="toggleTodo(\${index})">
+              <span>\${escapeHtml(todo.text)}</span>
+              <button onclick="deleteTodo(\${index})">×</button>
+            \`;
+            list.appendChild(item);
+          });
+        }
+
+        function addTodo() {
+          const input = document.getElementById('todo-input');
+          const text = input.value.trim();
+          if (!text) return;
+
+          todos.unshift({ text, completed: false });
+          localStorage.setItem('widgetTodos', JSON.stringify(todos));
+          input.value = '';
+          renderTodos();
+        }
+
+        function handleTodoKeypress(e) {
+          if (e.key === 'Enter') addTodo();
+        }
+
+        function toggleTodo(index) {
+          todos[index].completed = !todos[index].completed;
+          localStorage.setItem('widgetTodos', JSON.stringify(todos));
+          renderTodos();
+        }
+
+        function deleteTodo(index) {
+          todos.splice(index, 1);
+          localStorage.setItem('widgetTodos', JSON.stringify(todos));
+          renderTodos();
+        }
+
+        function escapeHtml(text) {
+          const div = document.createElement('div');
+          div.textContent = text;
+          return div.innerHTML;
+        }
+
+        // Memo functionality
+        let memoSaveTimeout;
+
+        function initMemo() {
+          const textarea = document.getElementById('memo-textarea');
+          const status = document.getElementById('memo-status');
+
+          textarea.value = localStorage.getItem('widgetMemo') || '';
+
+          textarea.addEventListener('keyup', () => {
+            status.textContent = 'Saving...';
+            status.classList.remove('saved');
+
+            clearTimeout(memoSaveTimeout);
+            memoSaveTimeout = setTimeout(() => {
+              localStorage.setItem('widgetMemo', textarea.value);
+              status.textContent = 'Saved';
+              status.classList.add('saved');
+              setTimeout(() => {
+                status.textContent = '';
+              }, 2000);
+            }, 300);
+          });
+        }
+
+        // Load saved theme and widget state on page load
         document.addEventListener('DOMContentLoaded', function() {
           const savedTheme = localStorage.getItem('theme');
           const themeToggle = document.querySelector('.theme-toggle');
           const lightTheme = document.getElementById('highlight-light');
           const darkTheme = document.getElementById('highlight-dark');
-          
+
           if (savedTheme === 'dark') {
             document.body.classList.add('dark-mode');
             themeToggle.innerHTML = '☀️';
             lightTheme.disabled = true;
             darkTheme.disabled = false;
           } else {
-            themeToggle.innerHTML = '🌙 ';
+            themeToggle.innerHTML = '🌙';
             lightTheme.disabled = false;
             darkTheme.disabled = true;
           }
+
+          // Widget panel state
+          const widgetOpen = localStorage.getItem('widgetPanelOpen') === 'true';
+          if (widgetOpen) {
+            document.querySelector('.main-wrapper').classList.add('widget-open');
+          }
+
+          // Widget panel width
+          const savedWidth = localStorage.getItem('widgetPanelWidth');
+          if (savedWidth) {
+            document.querySelector('.widget-panel').style.width = savedWidth + 'px';
+          }
+
+          // Section collapsed state
+          const collapsed = JSON.parse(localStorage.getItem('widgetCollapsed') || '{}');
+          Object.keys(collapsed).forEach(sectionId => {
+            if (collapsed[sectionId]) {
+              document.getElementById(sectionId)?.classList.add('collapsed');
+            }
+          });
+
+          // Initialize widgets
+          renderCalendar();
+          renderTodos();
+          initMemo();
         });
       </script>
     </body>
