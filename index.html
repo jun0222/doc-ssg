@@ -349,6 +349,37 @@
           color: #fff;
         }
 
+        .calendar-grid .day.holiday {
+          color: #e53935;
+        }
+
+        .calendar-grid .day.today.holiday {
+          color: #fff;
+        }
+
+        .calendar-grid .day.holiday.other-month {
+          color: #f8b0b0;
+        }
+
+        .calendar-grid .day[title] {
+          position: relative;
+        }
+
+        .calendar-grid .day[title]:hover::after {
+          content: attr(title);
+          position: absolute;
+          bottom: 100%;
+          left: 50%;
+          transform: translateX(-50%);
+          background: #333;
+          color: #fff;
+          padding: 4px 8px;
+          border-radius: 4px;
+          font-size: 11px;
+          white-space: nowrap;
+          z-index: 100;
+        }
+
         /* TODOリスト */
         .todo-input-wrapper {
           display: flex;
@@ -554,6 +585,14 @@
 
         body.dark-mode .calendar-grid .day.other-month {
           color: #555;
+        }
+
+        body.dark-mode .calendar-grid .day.holiday.other-month {
+          color: #8b5a5a;
+        }
+
+        body.dark-mode .calendar-grid .day[title]:hover::after {
+          background: #555;
         }
 
         body.dark-mode .todo-input-wrapper input {
@@ -1055,6 +1094,81 @@ console.log(htmlContent);
         // Calendar functionality
         let currentDate = new Date();
 
+        // 日本の祝日計算
+        function getJapaneseHolidays(year) {
+          const holidays = {};
+
+          // 固定祝日
+          holidays[year + '-01-01'] = '元日';
+          holidays[year + '-02-11'] = '建国記念の日';
+          holidays[year + '-02-23'] = '天皇誕生日';
+          holidays[year + '-04-29'] = '昭和の日';
+          holidays[year + '-05-03'] = '憲法記念日';
+          holidays[year + '-05-04'] = 'みどりの日';
+          holidays[year + '-05-05'] = 'こどもの日';
+          holidays[year + '-08-11'] = '山の日';
+          holidays[year + '-11-03'] = '文化の日';
+          holidays[year + '-11-23'] = '勤労感謝の日';
+
+          // ハッピーマンデー（第N月曜日）
+          function getNthMonday(y, m, n) {
+            const first = new Date(y, m - 1, 1);
+            const firstMonday = first.getDay() === 1 ? 1 : (8 - first.getDay() + 1) % 7 + 1;
+            return firstMonday + (n - 1) * 7;
+          }
+          holidays[year + '-01-' + String(getNthMonday(year, 1, 2)).padStart(2, '0')] = '成人の日';
+          holidays[year + '-07-' + String(getNthMonday(year, 7, 3)).padStart(2, '0')] = '海の日';
+          holidays[year + '-09-' + String(getNthMonday(year, 9, 3)).padStart(2, '0')] = '敬老の日';
+          holidays[year + '-10-' + String(getNthMonday(year, 10, 2)).padStart(2, '0')] = 'スポーツの日';
+
+          // 春分の日（3月20日または21日）
+          const springEquinox = Math.floor(20.8431 + 0.242194 * (year - 1980) - Math.floor((year - 1980) / 4));
+          holidays[year + '-03-' + String(springEquinox).padStart(2, '0')] = '春分の日';
+
+          // 秋分の日（9月22日または23日）
+          const autumnEquinox = Math.floor(23.2488 + 0.242194 * (year - 1980) - Math.floor((year - 1980) / 4));
+          holidays[year + '-09-' + String(autumnEquinox).padStart(2, '0')] = '秋分の日';
+
+          // 振替休日（祝日が日曜の場合、翌平日が振替休日）
+          const substituteHolidays = {};
+          Object.keys(holidays).forEach(dateStr => {
+            const d = new Date(dateStr);
+            if (d.getDay() === 0) { // 日曜日
+              let substitute = new Date(d);
+              substitute.setDate(substitute.getDate() + 1);
+              let subStr = substitute.toISOString().split('T')[0];
+              while (holidays[subStr] || substituteHolidays[subStr]) {
+                substitute.setDate(substitute.getDate() + 1);
+                subStr = substitute.toISOString().split('T')[0];
+              }
+              substituteHolidays[subStr] = '振替休日';
+            }
+          });
+          Object.assign(holidays, substituteHolidays);
+
+          // 国民の休日（祝日に挟まれた平日）
+          // 敬老の日と秋分の日の間
+          const keiro = year + '-09-' + String(getNthMonday(year, 9, 3)).padStart(2, '0');
+          const shubun = year + '-09-' + String(autumnEquinox).padStart(2, '0');
+          const keiroDate = new Date(keiro);
+          const shubunDate = new Date(shubun);
+          const diff = (shubunDate - keiroDate) / (1000 * 60 * 60 * 24);
+          if (diff === 2) {
+            const middle = new Date(keiroDate);
+            middle.setDate(middle.getDate() + 1);
+            const middleStr = middle.toISOString().split('T')[0];
+            if (!holidays[middleStr]) {
+              holidays[middleStr] = '国民の休日';
+            }
+          }
+
+          return holidays;
+        }
+
+        function formatDateKey(y, m, d) {
+          return y + '-' + String(m + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+        }
+
         function renderCalendar() {
           const year = currentDate.getFullYear();
           const month = currentDate.getMonth();
@@ -1067,6 +1181,13 @@ console.log(htmlContent);
           const lastDay = new Date(year, month + 1, 0);
           const startDay = firstDay.getDay();
           const daysInMonth = lastDay.getDate();
+
+          // 祝日を取得（前後の年も含む）
+          const holidays = {
+            ...getJapaneseHolidays(year - 1),
+            ...getJapaneseHolidays(year),
+            ...getJapaneseHolidays(year + 1)
+          };
 
           const grid = document.getElementById('calendar-grid');
           grid.innerHTML = '';
@@ -1082,11 +1203,19 @@ console.log(htmlContent);
           });
 
           // Previous month days
+          const prevMonth = month === 0 ? 11 : month - 1;
+          const prevYear = month === 0 ? year - 1 : year;
           const prevLastDay = new Date(year, month, 0).getDate();
           for (let i = startDay - 1; i >= 0; i--) {
+            const dayNum = prevLastDay - i;
             const day = document.createElement('div');
             day.className = 'day other-month';
-            day.textContent = prevLastDay - i;
+            const dateKey = formatDateKey(prevYear, prevMonth, dayNum);
+            if (holidays[dateKey]) {
+              day.classList.add('holiday');
+              day.title = holidays[dateKey];
+            }
+            day.textContent = dayNum;
             grid.appendChild(day);
           }
 
@@ -1095,8 +1224,16 @@ console.log(htmlContent);
             const day = document.createElement('div');
             const dayOfWeek = new Date(year, month, i).getDay();
             day.className = 'day';
-            if (dayOfWeek === 0) day.classList.add('sunday');
-            if (dayOfWeek === 6) day.classList.add('saturday');
+
+            const dateKey = formatDateKey(year, month, i);
+            if (holidays[dateKey]) {
+              day.classList.add('holiday');
+              day.title = holidays[dateKey];
+            } else {
+              if (dayOfWeek === 0) day.classList.add('sunday');
+              if (dayOfWeek === 6) day.classList.add('saturday');
+            }
+
             if (year === today.getFullYear() && month === today.getMonth() && i === today.getDate()) {
               day.classList.add('today');
             }
@@ -1105,11 +1242,18 @@ console.log(htmlContent);
           }
 
           // Next month days
+          const nextMonth = month === 11 ? 0 : month + 1;
+          const nextYear = month === 11 ? year + 1 : year;
           const totalCells = startDay + daysInMonth;
           const remaining = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
           for (let i = 1; i <= remaining; i++) {
             const day = document.createElement('div');
             day.className = 'day other-month';
+            const dateKey = formatDateKey(nextYear, nextMonth, i);
+            if (holidays[dateKey]) {
+              day.classList.add('holiday');
+              day.title = holidays[dateKey];
+            }
             day.textContent = i;
             grid.appendChild(day);
           }
