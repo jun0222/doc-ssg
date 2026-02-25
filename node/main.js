@@ -39,7 +39,7 @@ function wrapPasswordWithMask(html) {
     <span class="password-masked">${masked}</span>
     <span class="password-real" style="display:none;">${trimmedPassword}</span>
   </div>
-  <button class="password-toggle" onclick="togglePassword(this)" title="表示/非表示">👁</button>
+  <button class="password-toggle" onclick="togglePassword(this)" title="表示/非表示"><i class="fa-solid fa-eye"></i></button>
   <button class="password-copy" onclick="copyPassword(this)" title="コピー">Copy</button>
   <input type="hidden" class="password-value" value="${trimmedPassword.replace(/"/g, "&quot;")}">
 </div>`;
@@ -103,6 +103,7 @@ fs.readdir(inputDir, (err, files) => {
       <title>開発ドキュメント</title>
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/default.min.css" id="highlight-light">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/github-dark.min.css" id="highlight-dark" disabled>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
       <style>
         /* Light mode (default) */
         * {
@@ -801,15 +802,16 @@ fs.readdir(inputDir, (err, files) => {
           const wrapper = btn.closest('.password-wrapper');
           const masked = wrapper.querySelector('.password-masked');
           const real = wrapper.querySelector('.password-real');
+          const icon = btn.querySelector('i');
 
           if (masked.style.display === 'none') {
             masked.style.display = 'inline';
             real.style.display = 'none';
-            btn.textContent = '👁';
+            icon.className = 'fa-solid fa-eye';
           } else {
             masked.style.display = 'none';
             real.style.display = 'inline';
-            btn.textContent = '🙈';
+            icon.className = 'fa-solid fa-eye-slash';
           }
         }
 
