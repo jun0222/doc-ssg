@@ -24,6 +24,17 @@ renderer.image = function (imageObj, title, text) {
   return `<img src="${newHref}" alt="${text}" title="${title || ""}" />`;
 };
 
+renderer.code = function ({ text, lang, escaped }) {
+  if (lang === "mermaid") {
+    const htmlText = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const attrText = text.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
+    return `<div class="mermaid" data-source="${attrText}">${htmlText}</div>\n`;
+  }
+  const langClass = lang ? ` class="language-${lang}"` : "";
+  const body = escaped ? text : text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  return `<pre><code${langClass}>${body}</code></pre>\n`;
+};
+
 // Passwordセクションのコードブロックを隠す関数
 function wrapPasswordWithMask(html) {
   // <h3>Password</h3> の後の <pre><code>...</code></pre> を検出して置換
@@ -764,6 +775,20 @@ fs.readdir(inputDir, (err, files) => {
         body.dark-mode .resize-handle.active {
           background: #4CAF50;
         }
+
+        /* Mermaid diagrams */
+        .mermaid {
+          overflow-x: auto;
+          margin: 15px 0;
+          text-align: center;
+        }
+        .mermaid svg {
+          max-width: 100%;
+          height: auto;
+        }
+        body.dark-mode .mermaid svg {
+          background: transparent;
+        }
       </style>
     </head>
     <body>
@@ -830,6 +855,7 @@ fs.readdir(inputDir, (err, files) => {
         </div>
       </div>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
       <script>
         // Highlight.js initialization
         document.querySelectorAll('pre code').forEach((el) => {
@@ -884,6 +910,19 @@ fs.readdir(inputDir, (err, files) => {
           });
         }
 
+        // Mermaid rendering
+        function renderMermaid(isDark) {
+          mermaid.initialize({ startOnLoad: false, theme: isDark ? 'dark' : 'default' });
+          document.querySelectorAll('.mermaid').forEach(el => {
+            const src = el.getAttribute('data-source');
+            if (src) {
+              el.removeAttribute('data-processed');
+              el.textContent = src;
+            }
+          });
+          mermaid.run({ querySelector: '.mermaid' });
+        }
+
         // Dark mode functionality
         function toggleTheme() {
           const body = document.body;
@@ -897,12 +936,14 @@ fs.readdir(inputDir, (err, files) => {
             lightTheme.disabled = false;
             darkTheme.disabled = true;
             localStorage.setItem('theme', 'light');
+            renderMermaid(false);
           } else {
             body.classList.add('dark-mode');
             themeToggle.innerHTML = '☀️';
             lightTheme.disabled = true;
             darkTheme.disabled = false;
             localStorage.setItem('theme', 'dark');
+            renderMermaid(true);
           }
         }
 
@@ -1285,6 +1326,9 @@ fs.readdir(inputDir, (err, files) => {
           renderCalendar();
           renderTodos();
           initMemo();
+
+          // Initialize Mermaid
+          renderMermaid(savedTheme === 'dark');
         });
       </script>
     </body>

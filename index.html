@@ -668,6 +668,20 @@
         body.dark-mode .resize-handle.active {
           background: #4CAF50;
         }
+
+        /* Mermaid diagrams */
+        .mermaid {
+          overflow-x: auto;
+          margin: 15px 0;
+          text-align: center;
+        }
+        .mermaid svg {
+          max-width: 100%;
+          height: auto;
+        }
+        body.dark-mode .mermaid svg {
+          background: transparent;
+        }
       </style>
     </head>
     <body>
@@ -742,8 +756,7 @@
         <div class="file-content">
           <h2>github (2025-06-27 20:43)</h2>
 <h3>ID</h3>
-<pre><code>aaaaaaa
-</code></pre>
+<pre><code>aaaaaaa</code></pre>
 <h3>Password</h3>
 
 <div class="password-wrapper">
@@ -758,8 +771,7 @@
 <hr>
 <h2>hoge (2025-06-27 20:41)</h2>
 <h3>ID</h3>
-<pre><code>test
-</code></pre>
+<pre><code>test</code></pre>
 <h3>Password</h3>
 
 <div class="password-wrapper">
@@ -774,8 +786,7 @@
 <hr>
 <h2>aws (2025-06-27 05:57)</h2>
 <h3>ID</h3>
-<pre><code>aaaaaaaa
-</code></pre>
+<pre><code>aaaaaaaa</code></pre>
 <h3>Password</h3>
 
 <div class="password-wrapper">
@@ -790,8 +801,7 @@
 <hr>
 <h2>gcp (2025-06-27 05:56)</h2>
 <h3>ID</h3>
-<pre><code>aaaa
-</code></pre>
+<pre><code>aaaa</code></pre>
 <h3>Password</h3>
 
 <div class="password-wrapper">
@@ -842,12 +852,11 @@
 <p><code>marked</code>は、Markdown を HTML に変換するための高速で軽量なライブラリです。以下に、<code>marked</code>のインストール方法と基本的な使用方法を解説します。</p>
 <h2>インストール</h2>
 <p>まず、<code>marked</code>をプロジェクトにインストールします。</p>
-<pre><code class="language-bash">npm install marked
-</code></pre>
+<pre><code class="language-bash">npm install marked</code></pre>
 <h2>基本的な使用方法</h2>
 <p><code>marked</code>を使って Markdown を HTML に変換する簡単な例を示します。</p>
 <pre><code class="language-javascript">// markedのインポート
-const { marked } = require(&#39;marked&#39;);
+const { marked } = require('marked');
 
 // Markdown文字列
 const markdownString = `
@@ -861,7 +870,7 @@ const markdownString = `
 - リストアイテム2
 
 \`\`\`javascript
-console.log(&quot;Hello, world!&quot;);
+console.log("Hello, world!");
 \`\`\`
 `;
 
@@ -869,21 +878,19 @@ console.log(&quot;Hello, world!&quot;);
 const htmlContent = marked(markdownString);
 
 // HTMLの表示
-console.log(htmlContent);
-</code></pre>
+console.log(htmlContent);</code></pre>
 <h2>シンタックスハイライトの追加</h2>
 <p><code>highlight.js</code>を使ってコードブロックにシンタックスハイライトを追加する方法を示します。</p>
 <h3>インストール</h3>
-<pre><code class="language-bash">npm install highlight.js
-</code></pre>
+<pre><code class="language-bash">npm install highlight.js</code></pre>
 <h3>使用方法</h3>
-<pre><code class="language-javascript">const { marked } = require(&quot;marked&quot;);
-const hljs = require(&quot;highlight.js&quot;);
+<pre><code class="language-javascript">const { marked } = require("marked");
+const hljs = require("highlight.js");
 
 // シンタックスハイライトを設定
 marked.setOptions({
   highlight: function (code, lang) {
-    const language = hljs.getLanguage(lang) ? lang : &quot;plaintext&quot;;
+    const language = hljs.getLanguage(lang) ? lang : "plaintext";
     return hljs.highlight(code, { language }).value;
   },
 });
@@ -902,9 +909,26 @@ function add(a, b) {
 const htmlContent = marked(markdownString);
 
 // HTMLの表示
-console.log(htmlContent);
-</code></pre>
+console.log(htmlContent);</code></pre>
 <p>これで、<code>marked</code>ライブラリを使用して Markdown を HTML に変換し、シンタックスハイライトを追加することができます。</p>
+<h2>変換フロー</h2>
+<div class="mermaid" data-source="flowchart LR
+    A[Markdownファイル] --> B[marked.parse]
+    B --> C{コードブロック?}
+    C -->|lang=mermaid| D[div.mermaid]
+    C -->|その他| E[pre > code]
+    E --> F[hljs.highlightElement]
+    D --> G[mermaid.run]
+    F --> H[シンタックスハイライト付きHTML]
+    G --> H">flowchart LR
+    A[Markdownファイル] --&gt; B[marked.parse]
+    B --&gt; C{コードブロック?}
+    C --&gt;|lang=mermaid| D[div.mermaid]
+    C --&gt;|その他| E[pre &gt; code]
+    E --&gt; F[hljs.highlightElement]
+    D --&gt; G[mermaid.run]
+    F --&gt; H[シンタックスハイライト付きHTML]
+    G --&gt; H</div>
 
         </div>
       </details>
@@ -915,6 +939,56 @@ console.log(htmlContent);
         <div class="file-content">
           <h1>Git Flow ガイド</h1>
 <p>Git Flow は、Git を用いたブランチ管理のベストプラクティスの一つです。以下に基本的な Git Flow の使用方法とコマンドを解説します。</p>
+<h2>ブランチ構造</h2>
+<div class="mermaid" data-source="gitGraph
+   commit id: &quot;Initial commit&quot;
+   branch develop
+   checkout develop
+   commit id: &quot;Setup project&quot;
+   branch feature/my-feature
+   checkout feature/my-feature
+   commit id: &quot;Add feature&quot;
+   commit id: &quot;Fix tests&quot;
+   checkout develop
+   merge feature/my-feature
+   branch release/1.0.0
+   checkout release/1.0.0
+   commit id: &quot;Bump version&quot;
+   checkout main
+   merge release/1.0.0 tag: &quot;v1.0.0&quot;
+   checkout develop
+   merge release/1.0.0
+   branch hotfix/fix-bug
+   checkout hotfix/fix-bug
+   commit id: &quot;Fix critical bug&quot;
+   checkout main
+   merge hotfix/fix-bug tag: &quot;v1.0.1&quot;
+   checkout develop
+   merge hotfix/fix-bug">gitGraph
+   commit id: "Initial commit"
+   branch develop
+   checkout develop
+   commit id: "Setup project"
+   branch feature/my-feature
+   checkout feature/my-feature
+   commit id: "Add feature"
+   commit id: "Fix tests"
+   checkout develop
+   merge feature/my-feature
+   branch release/1.0.0
+   checkout release/1.0.0
+   commit id: "Bump version"
+   checkout main
+   merge release/1.0.0 tag: "v1.0.0"
+   checkout develop
+   merge release/1.0.0
+   branch hotfix/fix-bug
+   checkout hotfix/fix-bug
+   commit id: "Fix critical bug"
+   checkout main
+   merge hotfix/fix-bug tag: "v1.0.1"
+   checkout develop
+   merge hotfix/fix-bug</div>
 <h2>ブランチの種類</h2>
 <ol>
 <li><strong>master</strong>: リリース可能な状態のブランチ。</li>
@@ -926,36 +1000,27 @@ console.log(htmlContent);
 <h2>Git Flow のインストール</h2>
 <p>まず、Git Flow をインストールします。</p>
 <h3>macOS</h3>
-<pre><code class="language-bash">brew install git-flow
-</code></pre>
+<pre><code class="language-bash">brew install git-flow</code></pre>
 <h3>Ubuntu</h3>
-<pre><code class="language-bash">sudo apt-get install git-flow
-</code></pre>
+<pre><code class="language-bash">sudo apt-get install git-flow</code></pre>
 <h2>Git Flow の初期化</h2>
 <p>新しいリポジトリで Git Flow を初期化します。</p>
-<pre><code class="language-bash">git flow init
-</code></pre>
+<pre><code class="language-bash">git flow init</code></pre>
 <h2>Feature ブランチの作成</h2>
 <p>新機能の開発を開始するために、<code>develop</code>ブランチから feature ブランチを作成します。</p>
-<pre><code class="language-bash">git flow feature start my-feature
-</code></pre>
+<pre><code class="language-bash">git flow feature start my-feature</code></pre>
 <p>開発が完了したら、feature ブランチを<code>develop</code>にマージします。</p>
-<pre><code class="language-bash">git flow feature finish my-feature
-</code></pre>
+<pre><code class="language-bash">git flow feature finish my-feature</code></pre>
 <h2>Release ブランチの作成</h2>
 <p>リリース準備を開始するために、<code>develop</code>ブランチから release ブランチを作成します。</p>
-<pre><code class="language-bash">git flow release start 1.0.0
-</code></pre>
+<pre><code class="language-bash">git flow release start 1.0.0</code></pre>
 <p>リリース準備が完了したら、release ブランチを<code>master</code>と<code>develop</code>にマージします。</p>
-<pre><code class="language-bash">git flow release finish 1.0.0
-</code></pre>
+<pre><code class="language-bash">git flow release finish 1.0.0</code></pre>
 <h2>Hotfix ブランチの作成</h2>
 <p>リリース後の緊急修正を行うために、<code>master</code>ブランチから hotfix ブランチを作成します。</p>
-<pre><code class="language-bash">git flow hotfix start fix-bug
-</code></pre>
+<pre><code class="language-bash">git flow hotfix start fix-bug</code></pre>
 <p>修正が完了したら、hotfix ブランチを<code>master</code>と<code>develop</code>にマージします。</p>
-<pre><code class="language-bash">git flow hotfix finish fix-bug
-</code></pre>
+<pre><code class="language-bash">git flow hotfix finish fix-bug</code></pre>
 <p>以上が基本的な Git Flow の使用方法です。</p>
 <ul>
 <li><a href="https://example.com">link</a></li>
@@ -1023,6 +1088,7 @@ console.log(htmlContent);
         </div>
       </div>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
       <script>
         // Highlight.js initialization
         document.querySelectorAll('pre code').forEach((el) => {
@@ -1077,6 +1143,19 @@ console.log(htmlContent);
           });
         }
 
+        // Mermaid rendering
+        function renderMermaid(isDark) {
+          mermaid.initialize({ startOnLoad: false, theme: isDark ? 'dark' : 'default' });
+          document.querySelectorAll('.mermaid').forEach(el => {
+            const src = el.getAttribute('data-source');
+            if (src) {
+              el.removeAttribute('data-processed');
+              el.textContent = src;
+            }
+          });
+          mermaid.run({ querySelector: '.mermaid' });
+        }
+
         // Dark mode functionality
         function toggleTheme() {
           const body = document.body;
@@ -1090,12 +1169,14 @@ console.log(htmlContent);
             lightTheme.disabled = false;
             darkTheme.disabled = true;
             localStorage.setItem('theme', 'light');
+            renderMermaid(false);
           } else {
             body.classList.add('dark-mode');
             themeToggle.innerHTML = '☀️';
             lightTheme.disabled = true;
             darkTheme.disabled = false;
             localStorage.setItem('theme', 'dark');
+            renderMermaid(true);
           }
         }
 
@@ -1478,6 +1559,9 @@ console.log(htmlContent);
           renderCalendar();
           renderTodos();
           initMemo();
+
+          // Initialize Mermaid
+          renderMermaid(savedTheme === 'dark');
         });
       </script>
     </body>
